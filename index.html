@@ -125,26 +125,6 @@
             text-align: center;
         }
 
-        /* 테스트용 관리자 툴바 */
-        .admin-tools {
-            text-align: right;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-        .btn-admin {
-            background-color: #6c757d;
-            color: white;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 4px;
-            font-size: 13px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .btn-admin:hover { background-color: #5a6268; }
-
         /* 분류 영역 레이아웃 */
         .sorting-layout {
             display: flex;
@@ -413,11 +393,6 @@
         </div>
     </div>
 
-    <div class="admin-tools">
-        <button class="btn-admin" style="background-color: #5c636a;" onclick="manualBackup()">💾 [테스트용] 로컬 백업 세션 다운로드</button>
-        <button class="btn-admin" style="background-color: #0b5ed7;" onclick="researcherAutoFill()">🛠️ [테스트용] 일괄 처리 매크로 가동</button>
-    </div>
-
     <div class="sorting-layout">
         <div class="left-panel">
             <div class="panel-title">분류 할 진술문 (마우스로 드래그 후 오른쪽 그룹으로 이동)</div>
@@ -548,7 +523,6 @@
         group.className = 'group-box';
         group.id = `group-${targetId}`;
 
-        // [핵심 변경 포인트 1] titleText가 null일 때 'null' 문자가 찍히는 것을 방지하기 위해 `titleText || ''` 적용
         group.innerHTML = `
             <div class="group-header">
                 <input type="text" placeholder="그룹 ${targetId}의 그룹명을 적어주세요" class="group-name-input" value="${titleText || ''}" oninput="saveProgress()">
@@ -637,8 +611,6 @@
         }
     }
 
-    // [핵심 변경 포인트 2] localStorage -> sessionStorage로 모두 변경
-    // 이렇게 하면 탭을 닫으면 데이터가 날아가지만, 작업 도중 새로고침(F5)을 해도 입력했던 데이터는 그대로 유지됩니다.
     function saveProgress() {
         const data = {
             name: document.getElementById('participantId').value,
@@ -710,38 +682,6 @@
                 }
             }
         }
-    }
-
-    function researcherAutoFill() {
-        if(!confirm("[테스트 매크로] 전 문항 자동 완성 매킹을 진행할까요?")) return;
-        const container = document.getElementById('folderContainer');
-        container.innerHTML = '';
-        
-        const g1 = createNewGroup("테스트 수동 그룹 1", 1);
-        const dz = g1.querySelector('.group-dropzone');
-        
-        const pool = document.getElementById('cardPool');
-        Array.from(pool.children).forEach(c => dz.appendChild(c));
-        
-        for(let i=1; i<=totalCount; i++) {
-            const rImp = document.querySelector(`input[name="imp-${i}"][value="4"]`);
-            const rFea = document.querySelector(`input[name="fea-${i}"][value="3"]`);
-            if(rImp) rImp.checked = true;
-            if(rFea) rFea.checked = true;
-        }
-        sortZoneCards(dz);
-        saveProgress();
-        alert("테스트용 채우기가 정상적으로 완료되었습니다.");
-    }
-
-    function manualBackup() {
-        const cache = sessionStorage.getItem('concept_mapping_data');
-        if(!cache) { alert("백업 타겟 데이터가 부재합니다."); return; }
-        const blob = new Blob([cache], {type: "text/plain;charset=utf-8"});
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = `backup_session_${document.getElementById('participantId').value || 'anonymous'}.txt`;
-        link.click();
     }
 
     function processExtraction() {
@@ -838,7 +778,7 @@
             const cards = g.querySelectorAll('.statement-card');
             finalReport += `■ 그룹 ${index + 1}: ${title}\n`;
             cards.forEach(c => { 
-                finalReport += `   - ${c.innerText}\n`; 
+                finalReport += `    - ${c.innerText}\n`; 
             });
             finalReport += `\n`;
         });
