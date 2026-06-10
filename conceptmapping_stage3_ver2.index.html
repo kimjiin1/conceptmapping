@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시흥 도시건강 Concept Mapping 3단계 : 진술문 유사성 분류 및 그룹 내 중요도/실행가능성 평정</title>
+    <style>
+        :root {
+            --primary-blue: #0d6efd;
+            --bg-body: #f4f6f9;
+            --bg-panel: #ffffff;
+            --bg-list: #f8f9fa;
+            --bg-dropzone: #e9ecef;
+            --border-color: #dee2e6;
+            --text-dark: #212529;
+            --danger-red: #dc3545;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background-color: var(--bg-panel);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        /* 상단 안내문 */
+        .instruction-header h1 {
+            font-size: 24px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #333;
+            line-height: 1.4;
+        }
+        .instruction-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 30px 0;
+        }
+        .instruction-list > li {
+            margin-bottom: 20px;
+        }
+        .instruction-list > li > strong {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        .instruction-list ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin: 0;
+            color: #444;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* 노란색 주의/안내 박스 */
+        .notice-box {
+            background-color: #fff8e1;
+            border: 2px solid #ffecb3;
+            border-radius: 6px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .notice-box p {
+            margin: 0 0 10px 0;
+            font-weight: bold;
+            color: #5d4037;
+            font-size: 15px;
+        }
+        .email-area {
+            font-size: 15px;
+            color: #5d4037;
+            background-color: rgba(255,255,255,0.6);
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+        .btn-copy {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+
+        /* 참여자 정보 입력란 */
+        .participant-box {
+            background-color: #e8f0fe;
+            border: 2px solid #c2d7fa;
+            border-radius: 6px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .participant-box label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1a73e8;
+            margin-right: 10px;
+        }
+        .participant-box input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #c2d7fa;
+            border-radius: 4px;
+            width: 250px;
+            text-align: center;
+        }
+
+        /* 테스트용 관리자 툴바 */
+        .admin-tools {
+            text-align: right;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .btn-admin {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-admin:hover { background-color: #5a6268; }
+
+        /* 분류 영역 레이아웃 */
+        .sorting-layout {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 50px;
+            align-items: flex-start;
+        }
+
+        .left-panel {
+            flex: 0 0 350px;
+            position: sticky;
+            top: 20px;
+            height: calc(100vh - 80px);
+            display: flex;
+            flex-direction: column;
+        }
+        .panel-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .statement-list-container {
+            border: 2px solid var(--primary-blue);
+            background-color: var(--bg-panel);
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            border-radius: 6px;
+        }
+        .statement-list-container::-webkit-scrollbar { width: 8px; }
+        .statement-list-container::-webkit-scrollbar-thumb { background: #bbb; border-radius: 4px; }
+
+        .statement-card {
+            background-color: var(--bg-list);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #333;
+            cursor: grab;
+            line-height: 1.4;
+            user-select: none;
+        }
+
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .btn-add-group {
+            width: 100%;
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .groups-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .group-box {
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--bg-panel);
+            padding: 15px;
+        }
+        .group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .group-header input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 15px;
+            background-color: #fcfcfc;
+        }
+        .btn-delete-group {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .group-dropzone {
+            background-color: var(--bg-dropzone);
+            min-height: 120px;
+            border-radius: 4px;
+            padding: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-content: flex-start;
+        }
+
+        .group-dropzone:empty::before {
+            content: "왼쪽 진술문 목록에서 카드를 끌어다 놓으세요";
+            color: #6c757d;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            padding: 40px 0;
+            display: block;
+        }
+
+        /* 하단 평정 영역 */
+        .rating-section {
+            background-color: var(--bg-panel);
+            border-top: 3px solid #333;
+            padding-top: 40px;
+        }
+        .rating-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        .rating-item {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 15px;
+            background-color: var(--bg-panel);
+        }
+        .rating-item-text {
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .rating-scale-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .scale-label-main {
+            width: 90px;
+            font-weight: bold;
+            background-color: #e8f0fe;
+            color: #1a73e8;
+            border: 1px solid #c2d7fa;
+            text-align: center;
+            padding: 8px 0;
+            border-radius: 6px;
+            margin-right: 15px;
+        }
+        
+        .scale-label-side {
+            width: 40px;
+            text-align: center;
+        }
+        .scale-radios {
+            display: flex;
+            flex: 1;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+        .radio-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        .radio-unit input {
+            margin: 0;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-blue);
+        }
+
+        /* 하단 마무리 영역 */
+        .bottom-action-container {
+            margin-top: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .btn-submit-final {
+            background-color: #198754;
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(25, 135, 84, 0.3);
+            margin-top: 20px;
+        }
+        .btn-submit-final:hover {
+            background-color: #157347;
+        }
+        .text-danger {
+            color: var(--danger-red);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="instruction-header">
+        <h1>시흥 도시건강 Concept Mapping 3단계 : 진술문 유사성 분류 및 그룹 내 중요도/실행가능성 평정</h1>
+        <p>다음 지침에 따라서, 제시한 총 50개의 진술문을 활용하여 유사한 의미를 지닌 진술문을 분류하고, 각 그룹별 그룹명을 정해주시면 됩니다.</p>
+        
+        <ul class="instruction-list">
+            <li>
+                <strong>① 유사한 진술문 분류하기</strong>
+                <ul>
+                    <li>총 50개 진술문 중, 의미가 유사하거나 같은 범주라고 생각되는 진술문들을 오른쪽의 그룹으로 묶어주세요.</li>
+                    <li>단, 한 그룹은 <strong>최소 2개 이상</strong>의 진술문으로 구성되어야 하며, 하나의 그룹에 <strong>최대 16개까지만</strong> 포함될 수 있습니다.</li>
+                    <li>분류가 끝났을 때 남는 진술문이 없도록 모든 진술문을 그룹에 포함시켜 주세요.</li>
+                </ul>
+            </li>
+            <li>
+                <strong>② 각 그룹의 그룹명 정하기</strong>
+                <ul>
+                    <li>분류한 각 그룹을 가장 잘 설명할 수 있는 그룹명을 적어주세요.</li>
+                </ul>
+            </li>
+            <li>
+                <strong>③ 중요도 및 실행가능성 평정</strong>
+                <ul>
+                    <li>해당 진술문이 얼마나 중요한지, 그리고 실행가능한지 1 ~ 5점 척도로 평가해 주세요.</li>
+                </ul>
+            </li>
+        </ul>
+
+        <div class="participant-box">
+            <label for="participantId">참여자 코드: </label>
+            <input type="text" id="participantId" placeholder="참여자 코드를 입력해 주세요" oninput="saveProgress()"> 
+            <p style="margin: 10px 0 0 0; font-size: 13px; color: #666; font-weight: normal; line-height: 1.4;">
+                ※ <strong>이메일에서 부여된 코드를 입력해주세요. </p> </p> 원활한 연구 진행을 위해 브라우저를 종료하지 마시고 한 번에 작성을 완료해 주시기 바랍니다.</strong>
+            </p>
+        </div>
+
+        <div class="notice-box">
+            <p>분류와 평정 작업이 완료되었다면 아래의 '결과 파일 추출하기' 버튼을 눌러 다운로드된 <span class="text-danger">결과 파일(txt 파일)</span>을 아래 이메일로 공유해 주세요.</p>
+            <div class="email-area">
+                 제출처: <strong>kimjiin01@snu.ac.kr</strong>
+                <button class="btn-copy" onclick="copyEmail()">이메일 복사</button>
+            </div>
+            <p style="margin-top: 15px; font-size: 14px; color: #6c757d; font-weight: normal;">
+                📞 진행 중 오류가 발생하거나 문의 사항이 있으시면 언제든 연락 부탁드립니다.<br>
+                <strong>연구자 김지인: 010-5910-9132</strong>
+            </p>
+        </div>
+    </div>
+
+    <div class="admin-tools">
+        <button class="btn-admin" style="background-color: #5c636a;" onclick="manualBackup()">💾 [테스트용] 로컬 백업 세션 다운로드</button>
+        <button class="btn-admin" style="background-color: #0b5ed7;" onclick="researcherAutoFill()">🛠️ [테스트용] 일괄 처리 매크로 가동</button>
+    </div>
+
+    <div class="sorting-layout">
+        <div class="left-panel">
+            <div class="panel-title">분류 할 진술문 (마우스로 드래그 후 오른쪽 그룹으로 이동)</div>
+            <div class="statement-list-container" id="cardPool" ondragover="allowDrop(event)" ondrop="dropToPool(event)"></div>
+        </div>
+
+        <div class="right-panel">
+            <div class="panel-title">그룹 생성 영역</div>
+            <button class="btn-add-group" onclick="createNewGroup()">+ 새로운 그룹 추가하기</button>
+            <div class="groups-container" id="folderContainer"></div>
+        </div>
+    </div>
+
+    <div class="rating-section">
+        <div class="rating-title">평가 문항 (총 50개)</div>
+        <div id="ratingTableBody"></div>
+
+        <div class="bottom-action-container">
+            
+            <div class="notice-box" style="width: 100%; max-width: 800px;">
+                <p>분류와 평정 작업이 완료되었다면 아래의 '결과 파일 추출하기' 버튼을 눌러 다운로드된 <span class="text-danger">결과 파일(txt 파일)</span>을 아래 이메일로 공유해 주세요.</p>
+                <div class="email-area">
+                     제출처: <strong>kimjiin01@snu.ac.kr</strong>
+                    <button class="btn-copy" onclick="copyEmail()">이메일 복사</button>
+                </div>
+                <p style="margin-top: 15px; font-size: 14px; color: #6c757d; font-weight: normal;">
+                    📞 진행 중 오류가 발생하거나 문의 사항이 있으시면 언제든 연락 부탁드립니다.<br>
+                    <strong>연구자 김지인: 010-5910-9132</strong>
+                </p>
+            </div>
+
+            <button class="btn-submit-final" onclick="processExtraction()">📥 결과 파일 추출하기</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const totalCount = 50;
+    const statements = Array.from({length: totalCount}, (_, i) => ({
+        id: i + 1,
+        text: `${i + 1}. 진술문 ${i + 1}`
+    }));
+
+    window.onload = function() {
+        initCards();
+        initRatingTable();
+        setTimeout(function() {
+            loadProgress();
+        }, 100);
+    };
+
+    function copyEmail() {
+        navigator.clipboard.writeText("kimjiin01@snu.ac.kr").then(() => {
+            alert("이메일 주소가 복사되었습니다.");
+        });
+    }
+
+    function initCards() {
+        const pool = document.getElementById('cardPool');
+        pool.innerHTML = '';
+        statements.forEach(st => {
+            const card = document.createElement('div');
+            card.className = 'statement-card';
+            card.id = `card-${st.id}`;
+            card.draggable = true;
+            card.innerText = st.text;
+            card.ondragstart = drag;
+            pool.appendChild(card);
+        });
+    }
+
+    function initRatingTable() {
+        const container = document.getElementById('ratingTableBody');
+        container.innerHTML = '';
+        statements.forEach(st => {
+            const itemBox = document.createElement('div');
+            itemBox.className = 'rating-item';
+            itemBox.id = `rate-row-${st.id}`;
+            
+            let html = `
+                <div class="rating-item-text">${st.text}</div>
+                
+                <div class="rating-scale-row">
+                    <div class="scale-label-main">중요도</div>
+                    <div class="scale-label-side">낮음</div>
+                    <div class="scale-radios">
+                        ${[1,2,3,4,5].map(v => `
+                            <label class="radio-unit">
+                                <span>${v}</span>
+                                <input type="radio" name="imp-${st.id}" value="${v}" onchange="saveProgress()">
+                            </label>
+                        `).join('')}
+                    </div>
+                    <div class="scale-label-side">높음</div>
+                </div>
+
+                <div class="rating-scale-row">
+                    <div class="scale-label-main">실행가능성</div>
+                    <div class="scale-label-side">낮음</div>
+                    <div class="scale-radios">
+                        ${[1,2,3,4,5].map(v => `
+                            <label class="radio-unit">
+                                <span>${v}</span>
+                                <input type="radio" name="fea-${st.id}" value="${v}" onchange="saveProgress()">
+                            </label>
+                        `).join('')}
+                    </div>
+                    <div class="scale-label-side">높음</div>
+                </div>
+            `;
+            itemBox.innerHTML = html;
+            container.appendChild(itemBox);
+        });
+    }
+
+    let groupCount = 0;
+    function createNewGroup(titleText = "", customId = null) {
+        if(customId && customId > groupCount) {
+            groupCount = customId;
+        } else if(!customId) {
+            groupCount++;
+        }
+        
+        const targetId = customId || groupCount;
+        const container = document.getElementById('folderContainer');
+        const group = document.createElement('div');
+        group.className = 'group-box';
+        group.id = `group-${targetId}`;
+
+        // [핵심 변경 포인트 1] titleText가 null일 때 'null' 문자가 찍히는 것을 방지하기 위해 `titleText || ''` 적용
+        group.innerHTML = `
+            <div class="group-header">
+                <input type="text" placeholder="그룹 ${targetId}의 그룹명을 적어주세요" class="group-name-input" value="${titleText || ''}" oninput="saveProgress()">
+                <button class="btn-delete-group" onclick="deleteGroup('${group.id}')">그룹 삭제</button>
+            </div>
+            <div class="group-dropzone" ondragover="allowDrop(event)" ondrop="dropToGroup(event)"></div>
+        `;
+        container.appendChild(group);
+        saveProgress();
+        return group;
+    }
+
+    function deleteGroup(groupId) {
+        const group = document.getElementById(groupId);
+        const dropzone = group.querySelector('.group-dropzone');
+        const cards = Array.from(dropzone.children);
+        
+        const pool = document.getElementById('cardPool');
+        cards.forEach(card => pool.appendChild(card));
+        group.remove();
+        sortZoneCards(pool);
+        saveProgress();
+    }
+
+    function allowDrop(ev) { ev.preventDefault(); }
+    function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+
+    function dropToPool(ev) {
+        ev.preventDefault();
+        const data = ev.dataTransfer.getData("text");
+        if(data) {
+            const card = document.getElementById(data);
+            const parentDropzone = card.parentElement;
+            
+            document.getElementById('cardPool').appendChild(card);
+            sortZoneCards(document.getElementById('cardPool'));
+            
+            if(parentDropzone && parentDropzone.classList.contains('group-dropzone') && parentDropzone.children.length === 0) {
+                const parentGroup = parentDropzone.closest('.group-box');
+                if(parentGroup) {
+                    parentGroup.querySelector('.group-name-input').value = "";
+                }
+            }
+            
+            saveProgress();
+        }
+    }
+
+    function sortZoneCards(dropzone) {
+        const cards = Array.from(dropzone.children);
+        cards.sort((a, b) => {
+            const idA = parseInt(a.id.replace('card-', ''));
+            const idB = parseInt(b.id.replace('card-', ''));
+            return idA - idB;
+        });
+        cards.forEach(card => dropzone.appendChild(card));
+    }
+
+    function dropToGroup(ev) {
+        ev.preventDefault();
+        let targetDropzone = ev.target.closest('.group-dropzone');
+        if (!targetDropzone) return;
+
+        const currentCount = targetDropzone.children.length;
+        if (currentCount >= 16) {
+            alert("⚠️ 하나의 그룹에는 최대 16개까지만 넣을 수 있습니다.");
+            return;
+        }
+
+        const data = ev.dataTransfer.getData("text");
+        if(data) {
+            const card = document.getElementById(data);
+            const parentDropzone = card.parentElement;
+
+            targetDropzone.appendChild(card);
+            sortZoneCards(targetDropzone);
+
+            if(parentDropzone && parentDropzone.classList.contains('group-dropzone') && parentDropzone.children.length === 0) {
+                const parentGroup = parentDropzone.closest('.group-box');
+                if(parentGroup) {
+                    parentGroup.querySelector('.group-name-input').value = "";
+                }
+            }
+
+            saveProgress();
+        }
+    }
+
+    // [핵심 변경 포인트 2] localStorage -> sessionStorage로 모두 변경
+    // 이렇게 하면 탭을 닫으면 데이터가 날아가지만, 작업 도중 새로고침(F5)을 해도 입력했던 데이터는 그대로 유지됩니다.
+    function saveProgress() {
+        const data = {
+            name: document.getElementById('participantId').value,
+            poolCardIds: Array.from(document.getElementById('cardPool').querySelectorAll('.statement-card')).map(c => c.id),
+            groups: [],
+            ratings: {}
+        };
+
+        const groupBoxes = document.querySelectorAll('.group-box');
+        groupBoxes.forEach(g => {
+            const title = g.querySelector('.group-name-input').value;
+            const cardIds = Array.from(g.querySelectorAll('.statement-card')).map(c => c.id);
+            data.groups.push({ id: g.id, title: title, cardIds: cardIds });
+        });
+
+        for(let i=1; i<=totalCount; i++) {
+            const imp = document.querySelector(`input[name="imp-${i}"]:checked`);
+            const fea = document.querySelector(`input[name="fea-${i}"]:checked`);
+            data.ratings[`imp-${i}`] = imp ? imp.value : null;
+            data.ratings[`fea-${i}`] = fea ? fea.value : null;
+        }
+
+        sessionStorage.setItem('concept_mapping_data', JSON.stringify(data));
+    }
+
+    function loadProgress() {
+        const savedData = sessionStorage.getItem('concept_mapping_data');
+        if(!savedData) {
+            createNewGroup("", 1); createNewGroup("", 2); createNewGroup("", 3); createNewGroup("", 4);
+            return;
+        }
+
+        const data = JSON.parse(savedData);
+        document.getElementById('participantId').value = data.name || '';
+
+        const container = document.getElementById('folderContainer');
+        container.innerHTML = '';
+        
+        if(data.groups && data.groups.length > 0) {
+            data.groups.forEach(gData => {
+                const numericId = parseInt(gData.id.replace('group-', ''));
+                const groupEl = createNewGroup(gData.title, numericId);
+                const dropzone = groupEl.querySelector('.group-dropzone');
+                
+                gData.cardIds.forEach(cId => {
+                    const card = document.getElementById(cId);
+                    if(card) dropzone.appendChild(card);
+                });
+                sortZoneCards(dropzone);
+            });
+        } else {
+            createNewGroup("", 1); createNewGroup("", 2); createNewGroup("", 3); createNewGroup("", 4);
+        }
+
+        if(data.poolCardIds) {
+            const pool = document.getElementById('cardPool');
+            data.poolCardIds.forEach(cId => {
+                const card = document.getElementById(cId);
+                if(card) pool.appendChild(card);
+            });
+            sortZoneCards(pool);
+        }
+
+        if(data.ratings) {
+            for (const [key, val] of Object.entries(data.ratings)) {
+                if(val) {
+                    const radio = document.querySelector(`input[name="${key}"][value="${val}"]`);
+                    if(radio) radio.checked = true;
+                }
+            }
+        }
+    }
+
+    function researcherAutoFill() {
+        if(!confirm("[테스트 매크로] 전 문항 자동 완성 매킹을 진행할까요?")) return;
+        const container = document.getElementById('folderContainer');
+        container.innerHTML = '';
+        
+        const g1 = createNewGroup("테스트 수동 그룹 1", 1);
+        const dz = g1.querySelector('.group-dropzone');
+        
+        const pool = document.getElementById('cardPool');
+        Array.from(pool.children).forEach(c => dz.appendChild(c));
+        
+        for(let i=1; i<=totalCount; i++) {
+            const rImp = document.querySelector(`input[name="imp-${i}"][value="4"]`);
+            const rFea = document.querySelector(`input[name="fea-${i}"][value="3"]`);
+            if(rImp) rImp.checked = true;
+            if(rFea) rFea.checked = true;
+        }
+        sortZoneCards(dz);
+        saveProgress();
+        alert("테스트용 채우기가 정상적으로 완료되었습니다.");
+    }
+
+    function manualBackup() {
+        const cache = sessionStorage.getItem('concept_mapping_data');
+        if(!cache) { alert("백업 타겟 데이터가 부재합니다."); return; }
+        const blob = new Blob([cache], {type: "text/plain;charset=utf-8"});
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `backup_session_${document.getElementById('participantId').value || 'anonymous'}.txt`;
+        link.click();
+    }
+
+    function processExtraction() {
+        // 1. 참여자 이름 검증
+        const participantId = document.getElementById('participantId').value.trim();
+        if (!participantId) {
+            alert("⚠️ [참여자 정보 누락]\n파일 저장을 위해 참여자 코드를 먼저 입력해 주세요.");
+            const target = document.getElementById('participantId');
+            target.focus();
+            target.scrollIntoView({ behavior: "smooth", block: "center" });
+            return; 
+        }
+
+        // 2. 미분류 진술문 검증
+        const poolCards = Array.from(document.getElementById('cardPool').children);
+        if (poolCards.length > 0) {
+            alert(`⚠️ [미분류 진술문 존재]\n아직 분류되지 않은 진술문이 ${poolCards.length}개 남아있습니다.\n왼쪽 목록의 카드를 모두 그룹 안으로 이동시켜 주세요.`);
+            const target = document.getElementById('cardPool');
+            target.scrollIntoView({ behavior: "smooth", block: "center" });
+            return;
+        }
+
+        // 3. 그룹 조건 검증
+        const groups = document.querySelectorAll('.group-box');
+        if (groups.length === 0) {
+            alert("⚠️ [그룹 미존재]\n생성된 분류 그룹이 없습니다. 새로운 그룹을 추가하고 카드를 분류해 주세요.");
+            document.getElementById('folderContainer').scrollIntoView({ behavior: "smooth", block: "center" });
+            return;
+        }
+
+        let validGroups = [];
+        for (let g of groups) {
+            const titleInput = g.querySelector('.group-name-input').value.trim();
+            const cnt = g.querySelector('.group-dropzone').children.length;
+
+            if (cnt > 0) {
+                if (!titleInput) {
+                    alert("⚠️ [그룹명 누락]\n카드가 포함되어 있으나 그룹명이 비어 있는 그룹이 있습니다. 그룹명을 입력해 주세요.");
+                    const inputEl = g.querySelector('.group-name-input');
+                    inputEl.focus();
+                    inputEl.scrollIntoView({ behavior: "smooth", block: "center" });
+                    return;
+                }
+                if (cnt < 2) {
+                    alert(`⚠️ [그룹 수량 미달]\n'${titleInput}' 그룹에 카드가 1개만 포함되어 있습니다.\n가이드라인에 따라 각 그룹은 최소 2개 이상의 카드로 구성되어야 합니다.`);
+                    g.scrollIntoView({ behavior: "smooth", block: "center" });
+                    return;
+                }
+                validGroups.push(g);
+            }
+        }
+
+        // 4. 평정 점수 누락 전수 검증
+        let missingImp = [];
+        let missingFea = [];
+        for(let i=1; i<=totalCount; i++) {
+            const impCheck = document.querySelector(`input[name="imp-${i}"]:checked`);
+            const feaCheck = document.querySelector(`input[name="fea-${i}"]:checked`);
+            
+            if(!impCheck) missingImp.push(i);
+            if(!feaCheck) missingFea.push(i);
+        }
+
+        if (missingImp.length > 0 || missingFea.length > 0) {
+            let msg = "⚠️ [평정 점수 누락]\n하단 평가 문항 중 아직 체크하지 않은 항목이 있습니다.\n\n";
+            if (missingImp.length > 0) msg += `▪️ 중요도 누락 번호: ${missingImp.join(', ')}번\n`;
+            if (missingFea.length > 0) msg += `▪️ 실행가능성 누락 번호: ${missingFea.join(', ')}번\n`;
+            msg += "\n해당 번호의 라디오 버튼을 모두 체크한 후 다시 제출해 주세요.";
+            alert(msg);
+
+            const firstMissingId = missingImp[0] || missingFea[0];
+            document.getElementById(`rate-row-${firstMissingId}`).scrollIntoView({ behavior: "smooth", block: "center" });
+            return;
+        }
+
+        // --- 5. 파일 추출 ---
+        alert(`🎉 모든 검증을 통과했습니다!\n결과 파일(conceptmapping_stage3_result_${participantId}.txt)이 다운로드됩니다.\n\n해당 파일을 kimjiin01@snu.ac.kr로 전송해 주시면 감사하겠습니다.`);
+        
+        let statementGroupMap = {};
+        validGroups.forEach((g, index) => {
+            const groupNum = index + 1;
+            const cards = g.querySelectorAll('.statement-card');
+            cards.forEach(c => {
+                const sId = c.id.replace('card-', '');
+                statementGroupMap[sId] = groupNum;
+            });
+        });
+
+        let finalReport = `[참여자 성함]\n${participantId}\n\n`;
+        
+        finalReport += `[1. 연구자 확인용 요약]\n`;
+        validGroups.forEach((g, index) => {
+            const title = g.querySelector('.group-name-input').value;
+            const cards = g.querySelectorAll('.statement-card');
+            finalReport += `■ 그룹 ${index + 1}: ${title}\n`;
+            cards.forEach(c => { 
+                finalReport += `   - ${c.innerText}\n`; 
+            });
+            finalReport += `\n`;
+        });
+        
+        finalReport += `[2. 연구자 마스터 시트 가로 한 줄 복사용 데이터]\n`;
+        finalReport += `※ 연구담당자가 마스터 엑셀 시트에 참여자별로 한 줄씩 통째로 복사해서 붙여넣을 때 사용하세요.\n`;
+        finalReport += `※ 데이터는 1번 문항부터 50번 문항까지 순서대로 쉼표(,)로 구분되어 있습니다.\n\n`;
+        
+        let rowGroup = [];
+        for(let i=1; i<=totalCount; i++) { rowGroup.push(statementGroupMap[i] || 0); }
+        finalReport += `▶ MDS/HCA 분석용 그룹 번호 데이터 (1번~50번 순서):\n`;
+        finalReport += `${rowGroup.join(',')}\n\n`;
+
+        let rowImp = [];
+        for(let i=1; i<=totalCount; i++) { rowImp.push(document.querySelector(`input[name="imp-${i}"]:checked`).value); }
+        finalReport += `▶ Go-Zone 분석용 중요도 점수 데이터 (1번~50번 순서):\n`;
+        finalReport += `${rowImp.join(',')}\n\n`;
+
+        let rowFea = [];
+        for(let i=1; i<=totalCount; i++) { rowFea.push(document.querySelector(`input[name="fea-${i}"]:checked`).value); }
+        finalReport += `▶ Go-Zone 분석용 실행가능성 점수 데이터 (1번~50번 순서):\n`;
+        finalReport += `${rowFea.join(',')}\n\n`;
+
+        finalReport += `[3. 전체 데이터 세로 테이블 (백업용 CSV)]\n`;
+        finalReport += `No,Group_No,Importance,Feasibility\n`;
+        statements.forEach(st => {
+            const gNum = statementGroupMap[st.id] || 0;
+            const impVal = document.querySelector(`input[name="imp-${st.id}"]:checked`).value;
+            const feaVal = document.querySelector(`input[name="fea-${st.id}"]:checked`).value;
+            finalReport += `${st.id},${gNum},${impVal},${feaVal}\n`;
+        });
+        
+        const blobTxt = new Blob([finalReport], {type: "text/plain;charset=utf-8"});
+        const txtLink = document.createElement("a");
+        txtLink.href = URL.createObjectURL(blobTxt);
+        txtLink.download = `conceptmapping_stage3_result_${participantId}.txt`;
+        document.body.appendChild(txtLink);
+        txtLink.click();
+        document.body.removeChild(txtLink);
+
+        // 추출 후 저장소 비우고 초기화
+        sessionStorage.removeItem('concept_mapping_data');
+        location.reload();
+    }
+</script>
+</body>
+</html>
