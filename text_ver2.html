@@ -525,7 +525,7 @@
         }
 
         .group-dropzone:empty::before {
-            content: "이 그룹에 넣을 진술문을 이곳에 놓아 주세요";
+            content: "왼쪽 분류할 진술문을 이곳에 끌어다 놓아 주세요";
             color: #73829a;
             font-size: 14px;
             font-weight: 800;
@@ -815,7 +815,7 @@
             <article class="step-card">
                 <span class="step-number">1</span>
                 <strong>유사한 진술문 분류하기</strong>
-                <p>왼쪽 진술문 카드를 오른쪽 그룹 영역으로 옮겨 주세요. <span class="text-danger">모든 진술문이 반드시 하나의 그룹에 포함되어야 합니다.</span></p>
+                <p>왼쪽 진술문을 오른쪽 그룹 영역으로 옮겨 주세요. <span class="text-danger">모든 진술문이 반드시 하나의 그룹에 포함되어야 합니다.</span></p>
             </article>
             <article class="step-card">
                 <span class="step-number">2</span>
@@ -841,11 +841,11 @@
         <div class="method-guide" aria-label="사용 방법">
             <div class="method-card">
                 <strong>컴퓨터로 참여하는 경우</strong>
-                <p>진술문 카드를 마우스로 끌어 원하는 그룹의 회색 영역에 놓아주세요. 잘못 넣은 카드는 다시 왼쪽 진술문 목록으로 끌어오면 됩니다.</p>
+                <p>진술문을 마우스로 끌어 원하는 그룹의 회색 영역에 놓아주세요. 잘못 넣은 진술문은 다시 왼쪽 진술문 목록으로 끌어오면 됩니다.</p>
             </div>
             <div class="method-card">
                 <strong>휴대폰·태블릿으로 참여하는 경우</strong>
-                <p>진술문 카드를 한 번 누른 뒤 원하는 그룹의 회색 영역을 누르면 이동합니다. 잘못 넣은 경우에만 카드를 다시 누른 뒤 다른 그룹이나 왼쪽 진술문 목록 영역을 누르면 됩니다.</p>
+                <p>진술문을 한 번 누른 뒤 원하는 그룹의 회색 영역을 누르면 이동합니다. 잘못 넣은 경우에만 해당 진술문을 다시 누른 뒤 다른 그룹이나 왼쪽 진술문 목록 영역을 누르면 됩니다.</p>
             </div>
         </div>
 
@@ -870,7 +870,7 @@
 
     <div class="section-title-row">
         <h2>진술문 분류</h2>
-        <p>컴퓨터는 드래그, 휴대폰·태블릿은 카드 누른 뒤 그룹 영역을 눌러 이동해 주세요.</p>
+        <p>컴퓨터는 드래그, 휴대폰·태블릿은 진술문을 누른 뒤 그룹 영역을 눌러 이동해 주세요.</p>
     </div>
 
     <div class="sorting-layout">
@@ -1101,7 +1101,7 @@
 
         const input = document.createElement('input');
         input.type = 'text';
-        input.placeholder = `그룹 ${targetId}의 그룹명을 적어주세요`;
+        input.placeholder = `그룹명을 적어주세요`;
         input.className = 'group-name-input';
         input.value = titleText || '';
         input.oninput = saveProgress;
@@ -1385,14 +1385,14 @@
 
         const poolCards = Array.from(document.getElementById('cardPool').children);
         if (poolCards.length > 0) {
-            alert(`[미분류 진술문 존재]\n아직 분류되지 않은 진술문이 ${poolCards.length}개 남아있습니다.\n왼쪽 목록의 카드를 모두 그룹 안으로 이동시켜 주세요.`);
+            alert(`[미분류 진술문 존재]\n아직 분류되지 않은 진술문이 ${poolCards.length}개 남아있습니다.\n왼쪽 목록의 진술문을 모두 그룹 안으로 이동시켜 주세요.`);
             document.getElementById('cardPool').scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
         }
 
         const groups = document.querySelectorAll('.group-box');
         if (groups.length === 0) {
-            alert('[그룹 미존재]\n생성된 분류 그룹이 없습니다. 새로운 그룹을 추가하고 카드를 분류해 주세요.');
+            alert('[그룹 미존재]\n생성된 분류 그룹이 없습니다. 새로운 그룹을 추가하고 진술문을 분류해 주세요.');
             document.getElementById('folderContainer').scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
         }
@@ -1404,14 +1404,14 @@
 
             if (cnt > 0) {
                 if (!titleInput) {
-                    alert('[그룹명 누락]\n카드가 포함되어 있으나 그룹명이 비어 있는 그룹이 있습니다. 그룹명을 입력해 주세요.');
+                    alert('[그룹명 누락]\n진술문이 포함되어 있으나 그룹명이 비어 있는 그룹이 있습니다. 그룹명을 입력해 주세요.');
                     const inputEl = g.querySelector('.group-name-input');
                     inputEl.focus();
                     inputEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     return;
                 }
                 if (cnt < 2) {
-                    alert(`[그룹 수량 미달]\n'${titleInput}' 그룹에 카드가 1개만 포함되어 있습니다.\n가이드라인에 따라 각 그룹은 최소 2개 이상의 카드로 구성되어야 합니다.`);
+                    alert(`[그룹 수량 미달]\n'${titleInput}' 그룹에 진술문이 1개만 포함되어 있습니다.\n가이드라인에 따라 각 그룹은 최소 2개 이상으로 구성되어야 합니다.`);
                     g.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     return;
                 }
