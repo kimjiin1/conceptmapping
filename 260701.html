@@ -535,7 +535,7 @@
         }
 
         .group-dropzone:empty::before {
-            content: "왼쪽 분류할 진술문을 이곳에 끌어다 놓아 주세요";
+            content: "분류할 진술문을 이곳에 끌어다 놓아 주세요";
             color: #73829a;
             font-size: 14px;
             font-weight: 800;
@@ -857,11 +857,11 @@
         <div class="method-guide" aria-label="사용 방법">
             <div class="method-card">
                 <strong>컴퓨터로 참여하는 경우</strong>
-                <p>진술문을 마우스로 끌어 원하는 그룹의 회색 영역에 놓아주세요. <br>잘못 넣은 진술문은 왼쪽 진술문 목록 근처로 끌어오면 다시 목록으로 돌아갑니다.</p>
+                <p>진술문을 마우스로 끌어 원하는 그룹의 회색 영역에 놓아주세요. <br>잘못 넣은 진술문은 진술문 목록 근처로 끌어오면 다시 목록으로 돌아갑니다.</p>
             </div>
             <div class="method-card">
                 <strong>휴대폰·태블릿으로 참여하는 경우</strong>
-                <p>진술문을 한 번 누른 뒤 원하는 그룹의 회색 영역을 누르면 이동합니다. <br>잘못 넣은 경우 해당 진술문을 다시 누른 뒤 왼쪽 진술문 목록 쪽을 누르면 다시 목록으로 돌아갑니다.</p>
+                <p>진술문을 한 번 누른 뒤 원하는 그룹의 회색 영역을 누르면 이동합니다. <br>잘못 넣은 경우 해당 진술문을 다시 누른 뒤 진술문 목록 쪽을 누르면 다시 목록으로 돌아갑니다.</p>
             </div>
         </div>
 
@@ -1187,7 +1187,7 @@
         const cards = Array.from(dropzone.querySelectorAll('.statement-card'));
         const hasContent = cards.length > 0 || (titleInput && titleInput.value.trim());
 
-        if (hasContent && !confirm('이 그룹을 삭제할까요?\n그룹 안의 진술문은 왼쪽 목록으로 돌아갑니다.')) {
+        if (hasContent && !confirm('이 그룹을 삭제할까요?\n그룹 안의 진술문은 진술문 목록으로 돌아갑니다.')) {
             return;
         }
 
@@ -1546,7 +1546,7 @@
         if (poolCards.length > 0) {
             return {
                 ok: false,
-                message: '[미분류 진술문 존재]\n아직 분류되지 않은 진술문이 ' + poolCards.length + '개 남아있습니다.\n왼쪽 목록의 진술문을 모두 그룹 안으로 이동시켜 주세요.',
+                message: '[미분류 진술문 존재]\n아직 분류되지 않은 진술문이 ' + poolCards.length + '개 남아있습니다.\n진술문 목록의 진술문을 모두 그룹 안으로 이동시켜 주세요.',
                 target: document.getElementById('cardPool')
             };
         }
