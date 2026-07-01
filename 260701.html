@@ -1,1 +1,1819 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시흥도시건강 개념도 연구(2차 참여) : 진술문 분류 및 평정</title>
+    <style>
+        :root {
+            --primary: #3157d5;
+            --primary-dark: #233d9b;
+            --primary-soft: #eaf0ff;
+            --accent: #14a38b;
+            --bg-body: #eef5ff;
+            --bg-panel: #ffffff;
+            --bg-list: #f7f9ff;
+            --border-color: #d6def2;
+            --text-dark: #172033;
+            --text-muted: #5f6f89;
+            --danger-red: #dc3545;
+            --warning-bg: #fff8e6;
+            --warning-border: #ffd36a;
+            --success-bg: #ecfff7;
+            --success-border: #89e2c2;
+            --shadow-soft: 0 22px 55px rgba(36, 64, 116, 0.13);
+            --shadow-card: 0 8px 20px rgba(31, 55, 99, 0.08);
+            --radius-lg: 26px;
+            --radius-md: 16px;
+            --radius-sm: 10px;
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', '맑은 고딕', sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(49, 87, 213, 0.18), transparent 34%),
+                linear-gradient(135deg, #eef5ff 0%, #f8fbff 45%, #fff9ee 100%);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 48px 20px;
+            min-height: 100vh;
+        }
+
+        button, input { font-family: inherit; }
+        button { touch-action: manipulation; }
+
+        .container {
+            width: 100%;
+            max-width: 1320px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.96);
+            padding: 44px;
+            border: 1px solid rgba(214, 222, 242, 0.8);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #3157d5 0%, #2f79e6 52%, #14a38b 100%);
+            color: white;
+            padding: 38px 40px;
+            border-radius: 24px;
+            box-shadow: 0 18px 40px rgba(49, 87, 213, 0.24);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            right: -70px;
+            top: -80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.14);
+        }
+
+        .hero h1,
+        .hero p {
+            position: relative;
+            z-index: 1;
+        }
+
+        .instruction-header h1 {
+            font-size: clamp(32px, 4.2vw, 50px);
+            line-height: 1.18;
+            margin: 0;
+            letter-spacing: -0.045em;
+            word-break: keep-all;
+        }
+
+        .instruction-header h1 span {
+            display: inline-block;
+            margin-top: 8px;
+            font-size: 0.8em;
+            font-weight: 900;
+        }
+
+        .step-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            margin: 30px 0 26px;
+        }
+
+        .step-card,
+        .method-card,
+        .participant-box,
+        .group-box,
+        .rating-section,
+        .notice-box {
+            box-shadow: var(--shadow-card);
+        }
+
+        .step-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 22px;
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
+            background: var(--primary-soft);
+            color: var(--primary);
+            font-size: 16px;
+            font-weight: 900;
+            margin-bottom: 12px;
+        }
+
+        .step-card strong {
+            display: block;
+            font-size: 17px;
+            margin-bottom: 10px;
+            color: #1d2d50;
+        }
+
+        .step-card p,
+        .method-card p,
+        .helper-text,
+        .notice-box p {
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        .step-card p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.68;
+        }
+
+        .critical-box {
+            background: #fff5f5;
+            border: 1px solid #ffb4b4;
+            border-left: 8px solid var(--danger-red);
+            border-radius: var(--radius-md);
+            padding: 18px 24px;
+            margin: 0 0 24px;
+            box-shadow: 0 8px 20px rgba(220, 53, 69, 0.08);
+        }
+
+        .critical-box strong {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--danger-red);
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        .critical-box ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #3f2d2d;
+            font-size: 15px;
+            line-height: 1.75;
+            word-break: keep-all;
+        }
+
+        .method-guide {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            margin: 0 0 24px;
+        }
+
+        .method-card {
+            background: #ffffff;
+            border: 1px solid #cbd8ff;
+            border-left: 7px solid var(--primary);
+            border-radius: var(--radius-md);
+            padding: 20px 22px;
+        }
+
+        .method-card strong {
+            display: block;
+            color: var(--primary-dark);
+            font-size: 17px;
+            margin-bottom: 8px;
+        }
+
+        .method-card p {
+            margin: 8px 0 0;
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.65;
+        }
+
+        .participant-box {
+            background: linear-gradient(135deg, #ffffff 0%, #f3f7ff 100%);
+            border: 1px solid #bfd0f6;
+            border-radius: var(--radius-md);
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .participant-box label {
+            font-size: 17px;
+            font-weight: 900;
+            color: var(--primary-dark);
+            margin-right: 10px;
+        }
+
+        .participant-box input {
+            padding: 13px 16px;
+            font-size: 16px;
+            border: 1px solid #bfd0f6;
+            border-radius: 12px;
+            width: 280px;
+            text-align: center;
+            outline: none;
+            background: white;
+            transition: border-color 0.16s ease, box-shadow 0.16s ease;
+        }
+
+        .participant-box input:focus,
+        .group-header input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(49, 87, 213, 0.12);
+            outline: none;
+        }
+
+        .helper-text {
+            margin: 12px 0 0 0;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+            line-height: 1.7;
+        }
+
+        .notice-box {
+            background-color: var(--warning-bg);
+            border: 1px solid var(--warning-border);
+            border-radius: var(--radius-md);
+            padding: 20px 24px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .notice-box p {
+            margin: 0 0 10px 0;
+            font-weight: 800;
+            color: #5d4037;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+
+        .email-area {
+            font-size: 15px;
+            color: #5d4037;
+            background-color: rgba(255,255,255,0.75);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            margin-top: 5px;
+            box-shadow: inset 0 0 0 1px rgba(255, 211, 106, 0.5);
+        }
+
+
+        .btn-copy,
+        .btn-secondary {
+            border: none;
+            padding: 7px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .btn-copy {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #667085;
+            color: white;
+        }
+
+        .section-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin: 42px 0 14px;
+        }
+
+        .section-title-row h2 {
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: -0.03em;
+        }
+
+        .section-title-row p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 14px;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        .btn-reset-sorting {
+            background-color: #667085;
+            color: white;
+            border: none;
+            padding: 11px 16px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 900;
+            cursor: pointer;
+            flex-shrink: 0;
+            box-shadow: 0 8px 18px rgba(31, 55, 99, 0.12);
+        }
+
+        .sorting-layout {
+            display: flex;
+            gap: 18px;
+            margin-bottom: 56px;
+            align-items: stretch;
+            height: 80vh;
+            min-height: 560px;
+        }
+
+        .left-panel {
+            flex: 0 0 340px;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            min-height: 0;
+        }
+
+        .panel-title {
+            font-size: 15px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+            line-height: 1.35;
+            background: linear-gradient(135deg, var(--primary-soft), #f8fbff);
+            color: var(--primary-dark);
+            border: 1px solid #cad8ff;
+            border-left: 7px solid var(--primary);
+            padding: 12px 14px;
+            border-radius: 14px;
+            word-break: keep-all;
+        }
+
+        .statement-list-container,
+        .groups-container {
+            scrollbar-color: #b7c3dc transparent;
+        }
+
+        .statement-list-container {
+            border: 1px solid #b9c9ef;
+            background: rgba(255, 255, 255, 0.8);
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            border-radius: 18px;
+            min-height: 0;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.75);
+        }
+
+        .statement-list-container::-webkit-scrollbar,
+        .groups-container::-webkit-scrollbar { width: 8px; }
+
+        .statement-list-container::-webkit-scrollbar-thumb,
+        .groups-container::-webkit-scrollbar-thumb {
+            background: #b7c3dc;
+            border-radius: 999px;
+        }
+
+        .statement-card {
+            background: var(--bg-list);
+            border: 1px solid #d9e2f5;
+            padding: 14px 15px;
+            margin-bottom: 10px;
+            border-radius: 13px;
+            font-size: 14.5px;
+            color: #25324a;
+            cursor: grab;
+            line-height: 1.62;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+            white-space: normal;
+            user-select: none;
+            box-shadow: 0 4px 10px rgba(31, 55, 99, 0.06);
+            transition: transform 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease, background-color 0.14s ease;
+        }
+
+        .statement-card:hover {
+            transform: translateY(-1px);
+            border-color: var(--primary);
+            background: #ffffff;
+            box-shadow: 0 10px 20px rgba(49, 87, 213, 0.13);
+        }
+
+        .statement-card:active { cursor: grabbing; }
+
+        .statement-card.selected {
+            border-color: var(--danger-red);
+            background-color: #fff8f8;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.14), 0 8px 18px rgba(31, 55, 99, 0.08);
+        }
+
+        .statement-card.selected::before {
+            content: "선택됨 · ";
+            color: var(--danger-red);
+            font-weight: 900;
+        }
+
+        .statement-list-container.drop-target-ready,
+        .group-dropzone.drop-target-ready {
+            border-color: var(--danger-red);
+            background: #fffafa;
+        }
+
+        .btn-add-group {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), #2f79e6);
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 900;
+            border-radius: 15px;
+            cursor: pointer;
+            margin-bottom: 12px;
+            flex-shrink: 0;
+            box-shadow: 0 12px 24px rgba(49, 87, 213, 0.18);
+        }
+
+        .groups-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0;
+            padding-right: 6px;
+        }
+
+        .group-box {
+            border: 1px solid #d6def2;
+            border-radius: 18px;
+            background: #ffffff;
+            padding: 18px;
+        }
+
+        .group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .group-header input {
+            flex: 1;
+            padding: 11px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 14px;
+            background-color: #fcfcff;
+            outline: none;
+            min-width: 0;
+        }
+
+        .btn-delete-group {
+            background-color: #667085;
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .group-dropzone {
+            background: linear-gradient(135deg, rgba(241, 245, 255, 0.92), rgba(248, 251, 255, 0.92));
+            min-height: 198px;
+            border: 1px dashed #b7c8f3;
+            border-radius: 14px;
+            padding: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-content: flex-start;
+        }
+
+        .group-dropzone .statement-card {
+            flex: 1 1 280px;
+            margin-bottom: 0;
+        }
+
+        .group-dropzone:empty::before {
+            content: "왼쪽 분류할 진술문을 이곳에 끌어다 놓아 주세요";
+            color: #73829a;
+            font-size: 14px;
+            font-weight: 800;
+            text-align: center;
+            width: 100%;
+            padding: 42px 0;
+            display: block;
+        }
+
+        .rating-section {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 38px;
+        }
+
+        .rating-title {
+            text-align: center;
+            font-size: clamp(24px, 3vw, 34px);
+            font-weight: 900;
+            margin-bottom: 28px;
+            color: #1d2d50;
+            letter-spacing: -0.04em;
+        }
+
+        .rating-item {
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 22px;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #ffffff 0%, #fbfcff 100%);
+            box-shadow: 0 5px 16px rgba(31, 55, 99, 0.05);
+        }
+
+        .rating-item-text {
+            font-weight: 900;
+            font-size: 16px;
+            margin-bottom: 18px;
+            color: #25324a;
+            line-height: 1.65;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+            white-space: normal;
+        }
+
+        .rating-scale-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .rating-scale-row:last-child { margin-bottom: 0; }
+
+        .scale-label-main {
+            width: 100px;
+            font-weight: 900;
+            background-color: var(--primary-soft);
+            color: var(--primary-dark);
+            border: 1px solid #cbd8ff;
+            text-align: center;
+            padding: 9px 0;
+            border-radius: 999px;
+            flex-shrink: 0;
+        }
+
+        .scale-radios {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(46px, 1fr));
+            flex: 1;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .radio-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            min-height: 58px;
+            border: 1px solid #dce4f5;
+            border-radius: 12px;
+            background: #f8faff;
+            cursor: pointer;
+            font-weight: 800;
+        }
+
+        .radio-unit input {
+            margin: 0;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+
+        .bottom-action-container {
+            margin-top: 48px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .btn-submit-final {
+            background: linear-gradient(135deg, var(--accent), #18b98d);
+            color: white;
+            border: none;
+            padding: 20px 46px;
+            font-size: 21px;
+            font-weight: 900;
+            border-radius: 18px;
+            cursor: pointer;
+            box-shadow: 0 16px 30px rgba(20, 163, 139, 0.25);
+            margin-top: 20px;
+        }
+
+        .btn-submit-final:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        .text-danger {
+            color: var(--danger-red);
+            font-weight: 900;
+        }
+
+        .screen-reader-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        @media (max-width: 900px) {
+            body { padding: 18px 10px; }
+
+            .container {
+                padding: 18px;
+                border-radius: 20px;
+            }
+
+            .hero {
+                padding: 28px 22px;
+                border-radius: 18px;
+            }
+
+            .instruction-header h1 { font-size: 28px; }
+
+            .step-grid,
+            .method-guide { grid-template-columns: 1fr; }
+
+            .participant-box input {
+                width: 100%;
+                max-width: 260px;
+                margin-top: 10px;
+            }
+
+            .section-title-row {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .sorting-layout {
+                flex-direction: column;
+                height: auto;
+                min-height: 0;
+                gap: 18px;
+            }
+
+            .left-panel { flex: none; }
+
+            .statement-list-container {
+                min-height: 280px;
+                max-height: 48vh;
+                padding: 8px;
+                border-radius: 14px;
+            }
+
+            .groups-container {
+                overflow-y: visible;
+                max-height: none;
+                padding-right: 0;
+            }
+
+            .panel-title {
+                font-size: 12px;
+                padding: 8px 10px;
+                border-radius: 12px;
+            }
+
+            .statement-card {
+                font-size: 14px;
+                padding: 11px;
+                border-radius: 10px;
+                line-height: 1.6;
+            }
+
+            .btn-add-group {
+                padding: 10px;
+                font-size: 13px;
+                border-radius: 12px;
+            }
+
+            .group-box {
+                padding: 10px;
+                border-radius: 14px;
+            }
+
+            .group-header {
+                flex-wrap: wrap;
+                gap: 7px;
+            }
+
+            .group-header input {
+                width: 100%;
+                flex-basis: 100%;
+                font-size: 12px;
+                padding: 8px 10px;
+            }
+
+            .btn-delete-group {
+                padding: 8px 10px;
+                font-size: 11px;
+            }
+
+            .group-dropzone {
+                min-height: 144px;
+                padding: 8px;
+                gap: 6px;
+            }
+
+            .group-dropzone .statement-card { flex-basis: 100%; }
+
+            .group-dropzone:empty::before {
+                font-size: 11px;
+                padding: 33px 0;
+            }
+
+            .email-area {
+                border-radius: 14px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .rating-section {
+                padding: 22px 14px;
+                border-radius: 18px;
+            }
+
+            .rating-item { padding: 16px; }
+
+            .rating-scale-row {
+                flex-wrap: wrap;
+                gap: 7px;
+            }
+
+            .scale-label-main {
+                width: auto;
+                padding: 8px 12px;
+            }
+
+            .scale-radios {
+                grid-template-columns: repeat(5, minmax(42px, 1fr));
+                width: 100%;
+                flex-basis: 100%;
+            }
+
+            .radio-unit { min-height: 52px; }
+
+            .btn-submit-final {
+                width: 100%;
+                padding: 18px 20px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="instruction-header">
+        <section class="hero" aria-label="연구 안내">
+            <h1>시흥도시건강 개념도 연구(2차 참여)<br><span>: 진술문 분류 및 평정</span></h1>
+        </section>
+
+        <div class="step-grid" aria-label="진행 방법">
+            <article class="step-card">
+                <span class="step-number">1</span>
+                <strong>유사한 진술문 분류하기</strong>
+                <p>진술문을 그룹 영역으로 옮겨 주세요. <br><span class="text-danger">모든 진술문이 반드시 하나의 그룹에 포함되어야 합니다.</span></p>
+            </article>
+            <article class="step-card">
+                <span class="step-number">2</span>
+                <strong>그룹명 정하기</strong>
+                <p>각 그룹은 <span class="text-danger">2개 이상이면 됩니다.</span> <br>단, 한 그룹에 <span class="text-danger">16개를 넘게 넣을 수는 없습니다.</span> 그룹을 가장 잘 설명하는 그룹명도 입력해 주세요.</p>
+            </article>
+            <article class="step-card">
+                <span class="step-number">3</span>
+                <strong>중요도와 실행가능성 평정</strong>
+                <p>각 진술문이 시흥시에서 얼마나 중요한지, 그리고 실제로 실행 가능한지 <span class="text-danger">두 항목 모두</span> 1~5점으로 평가해 주세요.</p>
+            </article>
+        </div>
+
+        <div class="critical-box" aria-label="진행 전 확인사항">
+            <strong>진행 전 꼭 확인해 주세요</strong>
+            <ul>
+                <li><span class="text-danger">50개 진술문을 모두 그룹에 넣어야</span> 결과 파일을 추출할 수 있습니다.</li>
+                <li>한 그룹은 <span class="text-danger">2개 이상이면 됩니다.</span> <br>단, 16개를 넘게 넣을 수 없습니다.</li>
+                <li>평가 문항에서 <span class="text-danger">중요도와 실행가능성</span>을 모두 선택해 주세요.</li>
+            </ul>
+        </div>
+
+        <div class="method-guide" aria-label="사용 방법">
+            <div class="method-card">
+                <strong>컴퓨터로 참여하는 경우</strong>
+                <p>진술문을 마우스로 끌어 원하는 그룹의 회색 영역에 놓아주세요. <br>잘못 넣은 진술문은 왼쪽 진술문 목록 근처로 끌어오면 다시 목록으로 돌아갑니다.</p>
+            </div>
+            <div class="method-card">
+                <strong>휴대폰·태블릿으로 참여하는 경우</strong>
+                <p>진술문을 한 번 누른 뒤 원하는 그룹의 회색 영역을 누르면 이동합니다. <br>잘못 넣은 경우 해당 진술문을 다시 누른 뒤 왼쪽 진술문 목록 쪽을 누르면 다시 목록으로 돌아갑니다.</p>
+            </div>
+        </div>
+
+        <div class="participant-box">
+            <label for="participantId">참여자 코드</label>
+            <input type="text" id="participantId" placeholder="참여자 코드를 입력해 주세요" autocomplete="off" oninput="saveProgress()">
+            <p class="helper-text">※ 이메일에서 부여된 코드를 입력해주세요.<br><span class="text-danger">원활한 진행을 위해 브라우저를 종료하지 마시고 한 번에 작성을 완료해 주시기 바랍니다.</span></p>
+        </div>
+
+        <div class="notice-box">
+            <p>분류와 평정 작업이 완료되었다면 아래의 '결과 파일 추출하기' 버튼을 눌러 다운로드된 <span class="text-danger">결과 파일(txt 파일)</span>을 아래 이메일로 공유해 주세요.</p>
+            <div class="email-area">
+                 제출처: <strong>kimjiin01@snu.ac.kr</strong>
+                <button class="btn-copy" type="button" onclick="copyEmail()">이메일 복사</button>
+            </div>
+            <p style="margin-top: 15px; font-size: 14px; color: #6c757d; font-weight: 600;">
+                진행 중 오류가 발생하거나 문의 사항이 있으시면 연락 부탁드립니다.<br>
+                <strong>연구담당자 김지인: 05056745883</strong>
+            </p>
+        </div>
+    </div>
+
+    <div class="section-title-row">
+        <div>
+            <h2>진술문 분류</h2>
+            <p>컴퓨터는 드래그, 휴대폰·태블릿은 진술문을 누른 뒤 그룹 영역을 눌러 이동해 주세요.</p>
+        </div>
+        <button class="btn-reset-sorting" type="button" onclick="resetSortingOnly()">분류만 처음부터 다시하기</button>
+    </div>
+
+    <div class="sorting-layout">
+        <div class="left-panel" id="leftPanel" ondragover="allowDrop(event)" ondrop="dropToPool(event)">
+            <div class="panel-title">분류할 진술문</div>
+            <div class="statement-list-container" id="cardPool" ondragover="allowDrop(event)" ondrop="dropToPool(event)"></div>
+        </div>
+
+        <div class="right-panel">
+            <div class="panel-title">그룹 생성 영역</div>
+            <button class="btn-add-group" type="button" onclick="createNewGroup()">+ 새로운 그룹 추가하기</button>
+            <div class="groups-container" id="folderContainer"></div>
+        </div>
+    </div>
+
+    <div class="rating-section">
+        <div class="rating-title">중요도 및 실행가능성 평정 <span style="color: var(--primary);">50개</span></div>
+        <div id="ratingTableBody"></div>
+
+        <div class="bottom-action-container">
+            <div class="notice-box" style="width: 100%; max-width: 840px;">
+                <p>분류와 평정 작업이 완료되었다면 아래의 '결과 파일 추출하기' 버튼을 눌러 다운로드된 <span class="text-danger">결과 파일(txt 파일)</span>을 아래 이메일로 공유해 주세요.</p>
+                <div class="email-area">
+                     제출처: <strong>kimjiin01@snu.ac.kr</strong>
+                    <button class="btn-copy" type="button" onclick="copyEmail()">이메일 복사</button>
+                </div>
+                <p style="margin-top: 15px; font-size: 14px; color: #6c757d; font-weight: 600;">
+                    진행 중 오류가 발생하거나 문의 사항이 있으시면 연락 부탁드립니다.<br>
+                    <strong>연구담당자 김지인: 05056745883</strong>
+                </p>
+            </div>
+
+            <button class="btn-submit-final" id="submitButton" type="button" onclick="processExtraction()">결과 파일 추출하기</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 실제 진술문을 넣을 때는 아래 text 부분만 교체하면 됩니다.
+    const statements = [
+        { id: 1, text: '1. 진술문 1' },
+        { id: 2, text: '2. 진술문 2' },
+        { id: 3, text: '3. 진술문 3' },
+        { id: 4, text: '4. 진술문 4' },
+        { id: 5, text: '5. 진술문 5' },
+        { id: 6, text: '6. 진술문 6' },
+        { id: 7, text: '7. 진술문 7' },
+        { id: 8, text: '8. 진술문 8' },
+        { id: 9, text: '9. 진술문 9' },
+        { id: 10, text: '10. 진술문 10' },
+        { id: 11, text: '11. 진술문 11' },
+        { id: 12, text: '12. 진술문 12' },
+        { id: 13, text: '13. 진술문 13' },
+        { id: 14, text: '14. 진술문 14' },
+        { id: 15, text: '15. 진술문 15' },
+        { id: 16, text: '16. 진술문 16' },
+        { id: 17, text: '17. 진술문 17' },
+        { id: 18, text: '18. 진술문 18' },
+        { id: 19, text: '19. 진술문 19' },
+        { id: 20, text: '20. 진술문 20' },
+        { id: 21, text: '21. 진술문 21' },
+        { id: 22, text: '22. 진술문 22' },
+        { id: 23, text: '23. 진술문 23' },
+        { id: 24, text: '24. 진술문 24' },
+        { id: 25, text: '25. 진술문 25' },
+        { id: 26, text: '26. 진술문 26' },
+        { id: 27, text: '27. 진술문 27' },
+        { id: 28, text: '28. 진술문 28' },
+        { id: 29, text: '29. 진술문 29' },
+        { id: 30, text: '30. 진술문 30' },
+        { id: 31, text: '31. 진술문 31' },
+        { id: 32, text: '32. 진술문 32' },
+        { id: 33, text: '33. 진술문 33' },
+        { id: 34, text: '34. 진술문 34' },
+        { id: 35, text: '35. 진술문 35' },
+        { id: 36, text: '36. 진술문 36' },
+        { id: 37, text: '37. 진술문 37' },
+        { id: 38, text: '38. 진술문 38' },
+        { id: 39, text: '39. 진술문 39' },
+        { id: 40, text: '40. 진술문 40' },
+        { id: 41, text: '41. 진술문 41' },
+        { id: 42, text: '42. 진술문 42' },
+        { id: 43, text: '43. 진술문 43' },
+        { id: 44, text: '44. 진술문 44' },
+        { id: 45, text: '45. 진술문 45' },
+        { id: 46, text: '46. 진술문 46' },
+        { id: 47, text: '47. 진술문 47' },
+        { id: 48, text: '48. 진술문 48' },
+        { id: 49, text: '49. 진술문 49' },
+        { id: 50, text: '50. 진술문 50' }
+    ];
+
+    const totalCount = statements.length;
+    const minGroupSize = 2;
+    const maxGroupSize = 16;
+    const draftExpireHours = 24;
+    const storageKey = 'concept_mapping_data_v5';
+
+    let groupCount = 0;
+    let isRestoring = false;
+    let selectedCardId = null;
+    let submissionCompleted = false;
+
+    window.addEventListener('DOMContentLoaded', function() {
+        initCards();
+        initRatingTable();
+        initPoolEvents();
+        loadProgress();
+    });
+
+    function initPoolEvents() {
+        const pool = document.getElementById('cardPool');
+        const leftPanel = document.getElementById('leftPanel');
+
+        pool.addEventListener('click', function(event) {
+            if (event.target.closest('.statement-card')) return;
+            moveSelectedCardToZone(pool);
+        });
+
+        leftPanel.addEventListener('click', function(event) {
+            if (event.target.closest('.statement-card')) return;
+            moveSelectedCardToZone(pool);
+        });
+    }
+
+    function copyEmail() {
+        const email = 'kimjiin01@snu.ac.kr';
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(email).then(function() {
+                alert('이메일 주소가 복사되었습니다.');
+            }).catch(function() {
+                fallbackCopyEmail(email);
+            });
+        } else {
+            fallbackCopyEmail(email);
+        }
+    }
+
+    function fallbackCopyEmail(email) {
+        const tempInput = document.createElement('input');
+        tempInput.value = email;
+        tempInput.setAttribute('readonly', 'readonly');
+        tempInput.style.position = 'fixed';
+        tempInput.style.left = '-9999px';
+        document.body.appendChild(tempInput);
+        tempInput.select();
+
+        let success = false;
+        try {
+            success = document.execCommand('copy');
+        } catch (error) {
+            success = false;
+        }
+
+        document.body.removeChild(tempInput);
+        alert(success ? '이메일 주소가 복사되었습니다.' : '복사에 실패했습니다. 이메일 주소를 직접 입력해 주세요: ' + email);
+    }
+
+    function initCards() {
+        const pool = document.getElementById('cardPool');
+        pool.innerHTML = '';
+
+        statements.forEach(function(st) {
+            const card = document.createElement('div');
+            card.className = 'statement-card';
+            card.id = 'card-' + st.id;
+            card.draggable = true;
+            card.innerText = st.text;
+            card.ondragstart = drag;
+            card.addEventListener('click', handleCardClick);
+            pool.appendChild(card);
+        });
+    }
+
+    function initRatingTable() {
+        const container = document.getElementById('ratingTableBody');
+        container.innerHTML = '';
+
+        statements.forEach(function(st) {
+            const itemBox = document.createElement('div');
+            itemBox.className = 'rating-item';
+            itemBox.id = 'rate-row-' + st.id;
+
+            const statementText = document.createElement('div');
+            statementText.className = 'rating-item-text';
+            statementText.textContent = st.text;
+            itemBox.appendChild(statementText);
+
+            itemBox.appendChild(createRatingRow('중요도', 'imp-' + st.id));
+            itemBox.appendChild(createRatingRow('실행가능성', 'fea-' + st.id));
+            container.appendChild(itemBox);
+        });
+    }
+
+    function createRatingRow(labelText, inputName) {
+        const row = document.createElement('div');
+        row.className = 'rating-scale-row';
+
+        const label = document.createElement('div');
+        label.className = 'scale-label-main';
+        label.textContent = labelText;
+        row.appendChild(label);
+
+        const radios = document.createElement('div');
+        radios.className = 'scale-radios';
+
+        [1, 2, 3, 4, 5].forEach(function(value) {
+            const radioLabel = document.createElement('label');
+            radioLabel.className = 'radio-unit';
+
+            const number = document.createElement('span');
+            number.textContent = value;
+
+            const input = document.createElement('input');
+            input.type = 'radio';
+            input.name = inputName;
+            input.value = String(value);
+            input.onchange = saveProgress;
+            input.setAttribute('aria-label', labelText + ' ' + value + '점');
+
+            radioLabel.appendChild(number);
+            radioLabel.appendChild(input);
+            radios.appendChild(radioLabel);
+        });
+
+        row.appendChild(radios);
+        return row;
+    }
+
+    function createNewGroup(titleText = '', customId = null) {
+        const customNumber = customId ? Number(customId) : null;
+        if (customNumber && customNumber > groupCount) {
+            groupCount = customNumber;
+        } else if (!customNumber) {
+            groupCount++;
+        }
+
+        const targetId = customNumber || groupCount;
+        const container = document.getElementById('folderContainer');
+        const group = document.createElement('div');
+        group.className = 'group-box';
+        group.id = 'group-' + targetId;
+
+        const header = document.createElement('div');
+        header.className = 'group-header';
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = '그룹명을 적어주세요';
+        input.className = 'group-name-input';
+        input.value = titleText || '';
+        input.oninput = saveProgress;
+        input.setAttribute('aria-label', '그룹명 입력');
+
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'btn-delete-group';
+        deleteButton.type = 'button';
+        deleteButton.innerText = '그룹 삭제';
+        deleteButton.onclick = function() {
+            deleteGroup(group.id);
+        };
+
+        const dropzone = document.createElement('div');
+        dropzone.className = 'group-dropzone';
+        dropzone.ondragover = allowDrop;
+        dropzone.ondrop = dropToGroup;
+
+        dropzone.addEventListener('click', function(event) {
+            if (event.target.closest('.statement-card')) return;
+            event.stopPropagation();
+            moveSelectedCardToZone(dropzone);
+        });
+
+        group.addEventListener('click', function(event) {
+            if (event.target.closest('input, button, .statement-card')) return;
+            moveSelectedCardToZone(dropzone);
+        });
+
+        header.appendChild(input);
+        header.appendChild(deleteButton);
+        group.appendChild(header);
+        group.appendChild(dropzone);
+        container.appendChild(group);
+
+        saveProgress();
+        return group;
+    }
+
+    function deleteGroup(groupId) {
+        const group = document.getElementById(groupId);
+        if (!group) return;
+
+        const dropzone = group.querySelector('.group-dropzone');
+        const titleInput = group.querySelector('.group-name-input');
+        const cards = Array.from(dropzone.querySelectorAll('.statement-card'));
+        const hasContent = cards.length > 0 || (titleInput && titleInput.value.trim());
+
+        if (hasContent && !confirm('이 그룹을 삭제할까요?\n그룹 안의 진술문은 왼쪽 목록으로 돌아갑니다.')) {
+            return;
+        }
+
+        const pool = document.getElementById('cardPool');
+        cards.forEach(function(card) {
+            pool.appendChild(card);
+        });
+        group.remove();
+        sortZoneCards(pool);
+        clearSelectedCard();
+        saveProgress();
+    }
+
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        clearSelectedCard();
+        ev.dataTransfer.setData('text/plain', ev.target.id);
+        ev.dataTransfer.effectAllowed = 'move';
+    }
+
+    function handleCardClick(event) {
+        event.stopPropagation();
+        toggleCardSelection(event.currentTarget);
+    }
+
+    function toggleCardSelection(card) {
+        if (selectedCardId === card.id) {
+            clearSelectedCard();
+            return;
+        }
+
+        clearSelectedCard();
+        selectedCardId = card.id;
+        card.classList.add('selected');
+    }
+
+    function clearSelectedCard() {
+        if (selectedCardId) {
+            const previousCard = document.getElementById(selectedCardId);
+            if (previousCard) {
+                previousCard.classList.remove('selected');
+            }
+        }
+        selectedCardId = null;
+    }
+
+    function moveSelectedCardToZone(targetZone) {
+        if (!selectedCardId) return;
+
+        const card = document.getElementById(selectedCardId);
+        if (!card) {
+            clearSelectedCard();
+            return;
+        }
+
+        moveCardToZone(card, targetZone);
+    }
+
+    function moveCardToZone(card, targetZone) {
+        if (!card || !targetZone) return;
+
+        if (card.parentElement === targetZone) {
+            clearSelectedCard();
+            return;
+        }
+
+        if (targetZone.classList.contains('group-dropzone') && countCardsInZone(targetZone) >= maxGroupSize) {
+            alert('하나의 그룹에는 최대 ' + maxGroupSize + '개까지만 넣을 수 있습니다.');
+            return;
+        }
+
+        const parentDropzone = card.parentElement;
+        targetZone.appendChild(card);
+        sortZoneCards(targetZone);
+        clearEmptyGroupName(parentDropzone);
+        clearSelectedCard();
+        saveProgress();
+    }
+
+    function countCardsInZone(zone) {
+        return zone.querySelectorAll('.statement-card').length;
+    }
+
+    function clearEmptyGroupName(parentDropzone) {
+        if (parentDropzone && parentDropzone.classList.contains('group-dropzone') && countCardsInZone(parentDropzone) === 0) {
+            const parentGroup = parentDropzone.closest('.group-box');
+            const input = parentGroup ? parentGroup.querySelector('.group-name-input') : null;
+            if (input) input.value = '';
+        }
+    }
+
+    function dropToPool(ev) {
+        ev.preventDefault();
+        const data = ev.dataTransfer.getData('text/plain') || ev.dataTransfer.getData('text');
+        if (!data) return;
+
+        const card = document.getElementById(data);
+        moveCardToZone(card, document.getElementById('cardPool'));
+    }
+
+    function dropToGroup(ev) {
+        ev.preventDefault();
+        const targetDropzone = ev.target.closest('.group-dropzone');
+        if (!targetDropzone) return;
+
+        const data = ev.dataTransfer.getData('text/plain') || ev.dataTransfer.getData('text');
+        if (!data) return;
+
+        const card = document.getElementById(data);
+        moveCardToZone(card, targetDropzone);
+    }
+
+    function sortZoneCards(dropzone) {
+        if (!dropzone) return;
+        const cards = Array.from(dropzone.querySelectorAll('.statement-card'));
+        cards.sort(function(a, b) {
+            const idA = parseInt(a.id.replace('card-', ''), 10);
+            const idB = parseInt(b.id.replace('card-', ''), 10);
+            return idA - idB;
+        });
+        cards.forEach(function(card) {
+            dropzone.appendChild(card);
+        });
+    }
+
+    function saveProgress() {
+        if (isRestoring) return;
+
+        if (!hasAnyProgress()) {
+            clearDraft();
+                return;
+        }
+
+        const data = collectCurrentData();
+        data.savedAt = new Date().toISOString();
+        data.version = storageKey;
+
+        try {
+            sessionStorage.setItem(storageKey, JSON.stringify(data));
+        } catch (error) {
+            // 브라우저 저장 공간 접근이 제한되어도 화면 동작은 계속 유지합니다.
+        }
+    }
+
+    function collectCurrentData() {
+        const data = {
+            name: document.getElementById('participantId').value,
+            poolCardIds: Array.from(document.getElementById('cardPool').querySelectorAll('.statement-card')).map(function(c) { return c.id; }),
+            groups: [],
+            ratings: {}
+        };
+
+        const groupBoxes = document.querySelectorAll('.group-box');
+        groupBoxes.forEach(function(g) {
+            const title = g.querySelector('.group-name-input').value;
+            const cardIds = Array.from(g.querySelectorAll('.statement-card')).map(function(c) { return c.id; });
+            data.groups.push({ id: g.id, title: title, cardIds: cardIds });
+        });
+
+        for (let i = 1; i <= totalCount; i++) {
+            const imp = document.querySelector('input[name="imp-' + i + '"]:checked');
+            const fea = document.querySelector('input[name="fea-' + i + '"]:checked');
+            data.ratings['imp-' + i] = imp ? imp.value : null;
+            data.ratings['fea-' + i] = fea ? fea.value : null;
+        }
+
+        return data;
+    }
+
+    function loadProgress() {
+        let savedData = null;
+        try {
+            savedData = sessionStorage.getItem(storageKey);
+        } catch (error) {
+            savedData = null;
+        }
+
+        isRestoring = true;
+
+        try {
+            if (!savedData) {
+                createDefaultGroups();
+                return;
+            }
+
+            const data = JSON.parse(savedData);
+            if (isDraftExpired(data.savedAt)) {
+                clearDraft();
+                createDefaultGroups();
+                return;
+            }
+
+            restoreData(data);
+        } catch (error) {
+            clearDraft();
+            document.getElementById('folderContainer').innerHTML = '';
+            groupCount = 0;
+            createDefaultGroups();
+        } finally {
+            isRestoring = false;
+            saveProgress();
+        }
+    }
+
+    function restoreData(data) {
+        document.getElementById('participantId').value = data.name || '';
+
+        const container = document.getElementById('folderContainer');
+        container.innerHTML = '';
+        groupCount = 0;
+
+        if (data.groups && data.groups.length > 0) {
+            data.groups.forEach(function(gData) {
+                const numericId = parseInt(String(gData.id).replace('group-', ''), 10);
+                const groupEl = createNewGroup(gData.title, numericId);
+                const dropzone = groupEl.querySelector('.group-dropzone');
+
+                if (Array.isArray(gData.cardIds)) {
+                    gData.cardIds.forEach(function(cId) {
+                        const card = document.getElementById(cId);
+                        if (card) dropzone.appendChild(card);
+                    });
+                }
+                sortZoneCards(dropzone);
+            });
+        } else {
+            createDefaultGroups();
+        }
+
+        if (Array.isArray(data.poolCardIds)) {
+            const pool = document.getElementById('cardPool');
+            data.poolCardIds.forEach(function(cId) {
+                const card = document.getElementById(cId);
+                if (card) pool.appendChild(card);
+            });
+            sortZoneCards(pool);
+        }
+
+        if (data.ratings) {
+            Object.entries(data.ratings).forEach(function(entry) {
+                const key = entry[0];
+                const val = entry[1];
+                if (val) {
+                    const radio = document.querySelector('input[name="' + key + '"][value="' + val + '"]');
+                    if (radio) radio.checked = true;
+                }
+            });
+        }
+    }
+
+    function isDraftExpired(savedAt) {
+        if (!savedAt) return false;
+        const savedTime = new Date(savedAt).getTime();
+        if (Number.isNaN(savedTime)) return false;
+        const now = Date.now();
+        return now - savedTime > draftExpireHours * 60 * 60 * 1000;
+    }
+
+    function clearDraft() {
+        try {
+            sessionStorage.removeItem(storageKey);
+        } catch (error) {}
+    }
+
+    function resetSortingOnly() {
+        const ok = confirm('진술문 분류만 처음부터 다시 시작할까요?\n이미 선택한 중요도/실행가능성 평정은 그대로 유지됩니다.');
+        if (!ok) return;
+
+        const pool = document.getElementById('cardPool');
+        const allCards = Array.from(document.querySelectorAll('.statement-card'));
+        allCards.forEach(function(card) {
+            pool.appendChild(card);
+        });
+        sortZoneCards(pool);
+
+        document.getElementById('folderContainer').innerHTML = '';
+        groupCount = 0;
+        clearSelectedCard();
+        createDefaultGroups();
+        saveProgress();
+        pool.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function createDefaultGroups() {
+        createNewGroup('', 1);
+        createNewGroup('', 2);
+        createNewGroup('', 3);
+        createNewGroup('', 4);
+    }
+
+    function hasAnyProgress() {
+        const participantId = document.getElementById('participantId').value.trim();
+        if (participantId) return true;
+
+        const poolCount = countCardsInZone(document.getElementById('cardPool'));
+        if (poolCount !== totalCount) return true;
+
+        const groups = Array.from(document.querySelectorAll('.group-box'));
+        const hasGroupName = groups.some(function(g) {
+            return g.querySelector('.group-name-input').value.trim() !== '';
+        });
+        if (hasGroupName) return true;
+
+        for (let i = 1; i <= totalCount; i++) {
+            if (document.querySelector('input[name="imp-' + i + '"]:checked')) return true;
+            if (document.querySelector('input[name="fea-' + i + '"]:checked')) return true;
+        }
+
+        return false;
+    }
+
+    function processExtraction() {
+        const submitButton = document.getElementById('submitButton');
+        const validation = validateBeforeSubmit();
+        if (!validation.ok) {
+            alert(validation.message);
+            focusValidationTarget(validation.target);
+            return;
+        }
+
+        const result = buildResultData();
+        const safeParticipantId = result.participantId.replace(/[\\/:*?"<>|]/g, '_');
+        const fileName = 'conceptmapping_stage3_result_' + safeParticipantId + '.txt';
+
+        submitButton.disabled = true;
+        submitButton.textContent = '처리 중입니다...';
+
+        try {
+            downloadTxtFile(fileName, result.finalReport);
+            submissionCompleted = true;
+            clearDraft();
+            alert('수고하셨습니다!\n결과 파일(' + fileName + ')이 다운로드되었습니다.\n\n해당 파일을 kimjiin01@snu.ac.kr로 전송해 주시면 감사하겠습니다.');
+        } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = '결과 파일 추출하기';
+        }
+    }
+
+    function validateBeforeSubmit() {
+        const participantId = document.getElementById('participantId').value.trim();
+        if (!participantId) {
+            return {
+                ok: false,
+                message: '[참여자 정보 누락]\n파일 저장을 위해 참여자 코드를 먼저 입력해 주세요.',
+                target: document.getElementById('participantId')
+            };
+        }
+
+        const integrity = validateCardIntegrity();
+        if (!integrity.ok) return integrity;
+
+        const poolCards = Array.from(document.getElementById('cardPool').querySelectorAll('.statement-card'));
+        if (poolCards.length > 0) {
+            return {
+                ok: false,
+                message: '[미분류 진술문 존재]\n아직 분류되지 않은 진술문이 ' + poolCards.length + '개 남아있습니다.\n왼쪽 목록의 진술문을 모두 그룹 안으로 이동시켜 주세요.',
+                target: document.getElementById('cardPool')
+            };
+        }
+
+        const groups = Array.from(document.querySelectorAll('.group-box'));
+        if (groups.length === 0) {
+            return {
+                ok: false,
+                message: '[그룹 미존재]\n생성된 분류 그룹이 없습니다. 새로운 그룹을 추가하고 진술문을 분류해 주세요.',
+                target: document.getElementById('folderContainer')
+            };
+        }
+
+        let validGroupCount = 0;
+        for (const g of groups) {
+            const titleInput = g.querySelector('.group-name-input');
+            const title = titleInput.value.trim();
+            const cnt = countCardsInZone(g.querySelector('.group-dropzone'));
+
+            if (cnt > 0) {
+                validGroupCount++;
+                if (!title) {
+                    return {
+                        ok: false,
+                        message: '[그룹명 누락]\n진술문이 포함되어 있으나 그룹명이 비어 있는 그룹이 있습니다. 그룹명을 입력해 주세요.',
+                        target: titleInput
+                    };
+                }
+                if (cnt < minGroupSize) {
+                    return {
+                        ok: false,
+                        message: '[그룹 수량 미달]\n\'' + title + '\' 그룹에 진술문이 ' + cnt + '개만 포함되어 있습니다.\n가이드라인에 따라 각 그룹은 최소 ' + minGroupSize + '개 이상으로 구성되어야 합니다.',
+                        target: g
+                    };
+                }
+                if (cnt > maxGroupSize) {
+                    return {
+                        ok: false,
+                        message: '[그룹 수량 초과]\n\'' + title + '\' 그룹에 진술문이 ' + cnt + '개 포함되어 있습니다.\n한 그룹에는 최대 ' + maxGroupSize + '개까지만 포함할 수 있습니다.',
+                        target: g
+                    };
+                }
+            }
+        }
+
+        if (validGroupCount === 0) {
+            return {
+                ok: false,
+                message: '[유효 그룹 없음]\n진술문이 들어 있는 그룹이 없습니다. 모든 진술문을 그룹에 분류해 주세요.',
+                target: document.getElementById('folderContainer')
+            };
+        }
+
+        const missingImp = [];
+        const missingFea = [];
+        for (let i = 1; i <= totalCount; i++) {
+            const impCheck = document.querySelector('input[name="imp-' + i + '"]:checked');
+            const feaCheck = document.querySelector('input[name="fea-' + i + '"]:checked');
+
+            if (!impCheck) missingImp.push(i);
+            if (!feaCheck) missingFea.push(i);
+        }
+
+        if (missingImp.length > 0 || missingFea.length > 0) {
+            let msg = '[평정 점수 누락]\n하단 평가 문항 중 아직 체크하지 않은 항목이 있습니다.\n\n';
+            if (missingImp.length > 0) msg += '중요도 누락 번호: ' + missingImp.join(', ') + '번\n';
+            if (missingFea.length > 0) msg += '실행가능성 누락 번호: ' + missingFea.join(', ') + '번\n';
+            msg += '\n해당 번호의 라디오 버튼을 모두 체크한 후 다시 제출해 주세요.';
+
+            const firstMissingId = missingImp[0] || missingFea[0];
+            return {
+                ok: false,
+                message: msg,
+                target: document.getElementById('rate-row-' + firstMissingId)
+            };
+        }
+
+        const groupMapCheck = buildStatementGroupMap();
+        const missingGroupAssignments = [];
+        for (let i = 1; i <= totalCount; i++) {
+            if (!groupMapCheck.statementGroupMap[i]) missingGroupAssignments.push(i);
+        }
+
+        if (missingGroupAssignments.length > 0) {
+            return {
+                ok: false,
+                message: '[분류 데이터 오류]\n다음 진술문의 그룹 번호가 확인되지 않습니다: ' + missingGroupAssignments.join(', ') + '번\n페이지를 새로고침하지 말고 연구담당자에게 문의해 주세요.',
+                target: document.getElementById('folderContainer')
+            };
+        }
+
+        return { ok: true };
+    }
+
+    function validateCardIntegrity() {
+        const allCards = Array.from(document.querySelectorAll('.statement-card'));
+        if (allCards.length !== totalCount) {
+            return {
+                ok: false,
+                message: '[진술문 개수 오류]\n화면에 표시된 진술문 수가 ' + allCards.length + '개입니다. 원래는 ' + totalCount + '개여야 합니다.\n페이지를 새로고침하지 말고 연구담당자에게 문의해 주세요.',
+                target: document.getElementById('cardPool')
+            };
+        }
+
+        const seen = new Set();
+        const duplicates = [];
+        const invalids = [];
+
+        allCards.forEach(function(card) {
+            const id = parseInt(card.id.replace('card-', ''), 10);
+            if (!id || id < 1 || id > totalCount) invalids.push(card.id);
+            if (seen.has(id)) duplicates.push(id);
+            seen.add(id);
+        });
+
+        const missing = [];
+        for (let i = 1; i <= totalCount; i++) {
+            if (!seen.has(i)) missing.push(i);
+        }
+
+        if (duplicates.length > 0 || invalids.length > 0 || missing.length > 0) {
+            let msg = '[진술문 데이터 오류]\n진술문 목록에 중복, 누락 또는 잘못된 번호가 있습니다.\n';
+            if (duplicates.length > 0) msg += '중복 번호: ' + duplicates.join(', ') + '\n';
+            if (missing.length > 0) msg += '누락 번호: ' + missing.join(', ') + '\n';
+            if (invalids.length > 0) msg += '잘못된 카드 ID: ' + invalids.join(', ') + '\n';
+            msg += '페이지를 새로고침하지 말고 연구담당자에게 문의해 주세요.';
+
+            return {
+                ok: false,
+                message: msg,
+                target: document.getElementById('cardPool')
+            };
+        }
+
+        return { ok: true };
+    }
+
+    function focusValidationTarget(target) {
+        if (!target) return;
+        if (typeof target.focus === 'function') target.focus();
+        if (typeof target.scrollIntoView === 'function') {
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    function buildStatementGroupMap() {
+        const statementGroupMap = {};
+        const validGroups = [];
+        const groups = Array.from(document.querySelectorAll('.group-box'));
+
+        groups.forEach(function(g) {
+            const cards = Array.from(g.querySelectorAll('.statement-card'));
+            if (cards.length > 0) validGroups.push(g);
+        });
+
+        validGroups.forEach(function(g, index) {
+            const groupNum = index + 1;
+            const cards = g.querySelectorAll('.statement-card');
+            cards.forEach(function(c) {
+                const sId = c.id.replace('card-', '');
+                statementGroupMap[sId] = groupNum;
+            });
+        });
+
+        return { statementGroupMap: statementGroupMap, validGroups: validGroups };
+    }
+
+    function buildResultData() {
+        const participantId = document.getElementById('participantId').value.trim();
+        const mapData = buildStatementGroupMap();
+        const statementGroupMap = mapData.statementGroupMap;
+        const validGroups = mapData.validGroups;
+
+        let finalReport = '[참여자 코드]\n' + participantId + '\n\n';
+
+        finalReport += '[1. 연구자 확인용 요약]\n';
+        validGroups.forEach(function(g, index) {
+            const title = g.querySelector('.group-name-input').value.trim();
+            const cards = g.querySelectorAll('.statement-card');
+            finalReport += '■ 그룹 ' + (index + 1) + ': ' + title + '\n';
+            cards.forEach(function(c) {
+                finalReport += '    - ' + c.innerText + '\n';
+            });
+            finalReport += '\n';
+        });
+
+        finalReport += '[2. 연구자 마스터 시트 가로 한 줄 복사용 데이터]\n';
+        finalReport += '※ 연구담당자가 마스터 엑셀 시트에 참여자별로 한 줄씩 통째로 복사해서 붙여넣을 때 사용하세요.\n';
+        finalReport += '※ 데이터는 1번 문항부터 50번 문항까지 순서대로 쉼표(,)로 구분되어 있습니다.\n\n';
+
+        const rowGroup = [];
+        for (let i = 1; i <= totalCount; i++) {
+            rowGroup.push(statementGroupMap[i]);
+        }
+        finalReport += '▶ MDS/HCA 분석용 그룹 번호 데이터 (1번~50번 순서):\n';
+        finalReport += rowGroup.join(',') + '\n\n';
+
+        const rowImp = [];
+        for (let i = 1; i <= totalCount; i++) {
+            rowImp.push(document.querySelector('input[name="imp-' + i + '"]:checked').value);
+        }
+        finalReport += '▶ Go-Zone 분석용 중요도 점수 데이터 (1번~50번 순서):\n';
+        finalReport += rowImp.join(',') + '\n\n';
+
+        const rowFea = [];
+        for (let i = 1; i <= totalCount; i++) {
+            rowFea.push(document.querySelector('input[name="fea-' + i + '"]:checked').value);
+        }
+        finalReport += '▶ Go-Zone 분석용 실행가능성 점수 데이터 (1번~50번 순서):\n';
+        finalReport += rowFea.join(',') + '\n\n';
+
+        finalReport += '[3. 전체 데이터 세로 테이블 (백업용 CSV)]\n';
+        finalReport += 'No,Group_No,Importance,Feasibility\n';
+        statements.forEach(function(st) {
+            const gNum = statementGroupMap[st.id];
+            const impVal = document.querySelector('input[name="imp-' + st.id + '"]:checked').value;
+            const feaVal = document.querySelector('input[name="fea-' + st.id + '"]:checked').value;
+            finalReport += st.id + ',' + gNum + ',' + impVal + ',' + feaVal + '\n';
+        });
+
+        const groupSummary = validGroups.map(function(g, index) {
+            return {
+                groupNo: index + 1,
+                groupName: g.querySelector('.group-name-input').value.trim(),
+                statementIds: Array.from(g.querySelectorAll('.statement-card')).map(function(c) {
+                    return Number(c.id.replace('card-', ''));
+                })
+            };
+        });
+
+        const verticalData = statements.map(function(st) {
+            return {
+                no: st.id,
+                statement: st.text,
+                groupNo: Number(statementGroupMap[st.id]),
+                importance: Number(document.querySelector('input[name="imp-' + st.id + '"]:checked').value),
+                feasibility: Number(document.querySelector('input[name="fea-' + st.id + '"]:checked').value)
+            };
+        });
+
+        return {
+            participantId: participantId,
+            submittedAt: new Date().toISOString(),
+            totalCount: totalCount,
+            groups: groupSummary,
+            groupRow: rowGroup.map(Number),
+            importanceRow: rowImp.map(Number),
+            feasibilityRow: rowFea.map(Number),
+            verticalData: verticalData,
+            finalReport: finalReport
+        };
+    }
+
+    function downloadTxtFile(fileName, content) {
+        const blobTxt = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const txtLink = document.createElement('a');
+        const objectUrl = URL.createObjectURL(blobTxt);
+        txtLink.href = objectUrl;
+        txtLink.download = fileName;
+        document.body.appendChild(txtLink);
+        txtLink.click();
+        document.body.removeChild(txtLink);
+        setTimeout(function() {
+            URL.revokeObjectURL(objectUrl);
+        }, 1000);
+    }
+</script>
+</body>
+</html>
 
