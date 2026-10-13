@@ -552,6 +552,16 @@
             align-content: flex-start;
         }
 
+        .group-box.drag-over {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(49, 87, 213, 0.25);
+        }
+
+        .group-box.drag-over .group-dropzone {
+            border-color: var(--primary);
+            background: #e6edff;
+        }
+
         .group-dropzone .statement-card {
             flex: 1 1 280px;
             margin-bottom: 0;
@@ -1194,8 +1204,11 @@
 
         const dropzone = document.createElement('div');
         dropzone.className = 'group-dropzone';
-        dropzone.ondragover = allowDrop;
-        dropzone.ondrop = dropToGroup;
+        group.ondragover = function(ev) {
+            ev.preventDefault();
+            setDragOverGroup(group);
+        };
+        group.ondrop = dropToGroup;
 
         dropzone.addEventListener('click', function(event) {
             if (event.target.closest('.statement-card')) return;
@@ -1243,7 +1256,49 @@
 
     function allowDrop(ev) {
         ev.preventDefault();
+        setDragOverGroup(null);
     }
+
+    function setDragOverGroup(group) {
+        document.querySelectorAll('.group-box.drag-over').forEach(function(el) {
+            if (el !== group) el.classList.remove('drag-over');
+        });
+        if (group) group.classList.add('drag-over');
+    }
+
+    // 드래그 중 화면/그룹 영역 가장자리에 가까워지면 자동으로 스크롤합니다.
+    function autoScrollWhileDragging(ev) {
+        const edge = 80;
+        const maxStep = 24;
+        const y = ev.clientY;
+        const viewHeight = window.innerHeight;
+
+        if (y < edge) {
+            window.scrollBy({ top: -Math.ceil((edge - y) / edge * maxStep), behavior: 'instant' });
+        } else if (y > viewHeight - edge) {
+            window.scrollBy({ top: Math.ceil((y - (viewHeight - edge)) / edge * maxStep), behavior: 'instant' });
+        }
+
+        const container = document.getElementById('folderContainer');
+        if (!container || container.scrollHeight <= container.clientHeight) return;
+
+        const rect = container.getBoundingClientRect();
+        if (ev.clientX < rect.left || ev.clientX > rect.right) return;
+
+        const top = Math.max(rect.top, 0);
+        const bottom = Math.min(rect.bottom, viewHeight);
+        if (y < top || y > bottom) return;
+
+        if (y < top + edge) {
+            container.scrollTop -= Math.ceil((top + edge - y) / edge * maxStep);
+        } else if (y > bottom - edge) {
+            container.scrollTop += Math.ceil((y - (bottom - edge)) / edge * maxStep);
+        }
+    }
+
+    document.addEventListener('dragover', autoScrollWhileDragging);
+    document.addEventListener('dragend', function() { setDragOverGroup(null); });
+    document.addEventListener('drop', function() { setDragOverGroup(null); });
 
     function drag(ev) {
         clearSelectedCard();
@@ -1333,7 +1388,9 @@
 
     function dropToGroup(ev) {
         ev.preventDefault();
-        const targetDropzone = ev.target.closest('.group-dropzone');
+        setDragOverGroup(null);
+        const groupBox = ev.target.closest('.group-box');
+        const targetDropzone = groupBox ? groupBox.querySelector('.group-dropzone') : null;
         if (!targetDropzone) return;
 
         const data = ev.dataTransfer.getData('text/plain') || ev.dataTransfer.getData('text');
