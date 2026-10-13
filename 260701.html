@@ -471,6 +471,58 @@
             font-weight: 900;
         }
 
+        .selection-bar {
+            position: fixed;
+            left: 50%;
+            bottom: 16px;
+            transform: translateX(-50%);
+            width: calc(100% - 24px);
+            max-width: 640px;
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 12px 14px;
+            background: #ffffff;
+            border: 2px solid var(--danger-red);
+            border-radius: 16px;
+            box-shadow: 0 10px 28px rgba(31, 55, 99, 0.25);
+        }
+
+        .selection-bar.show { display: flex; }
+
+        .selection-bar-text {
+            flex: 1 1 100%;
+            font-size: 14px;
+            font-weight: 700;
+            color: #1d2d50;
+            word-break: keep-all;
+        }
+
+        .selection-bar-text strong { color: var(--danger-red); }
+
+        .selection-bar button {
+            flex: 1 1 0;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 10px;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            word-break: keep-all;
+        }
+
+        .btn-return-pool {
+            background: var(--danger-red);
+            color: #ffffff;
+        }
+
+        .btn-cancel-select {
+            background: #e9edf5;
+            color: #1d2d50;
+        }
+
         .statement-list-container.drop-target-ready,
         .group-dropzone.drop-target-ready {
             border-color: var(--danger-red);
@@ -894,7 +946,7 @@
             </div>
             <div class="method-card">
                 <strong>휴대폰·태블릿으로 참여하는 경우</strong>
-                <p>진술문을 한 번 누른 뒤 원하는 그룹의 회색 영역을 누르면 이동합니다. <br>잘못 넣은 경우 해당 진술문을 다시 누른 뒤 진술문 목록 쪽을 누르면 다시 목록으로 돌아갑니다.</p>
+                <p>진술문을 한 번 누른 뒤 원하는 그룹의 아무 곳(그룹 안의 다른 진술문 포함)이나 누르면 이동합니다. <br>잘못 넣은 경우 해당 진술문을 누른 뒤 화면 아래의 '목록으로 되돌리기' 버튼을 누르면 목록으로 돌아갑니다.</p>
             </div>
         </div>
 
@@ -1308,7 +1360,40 @@
 
     function handleCardClick(event) {
         event.stopPropagation();
-        toggleCardSelection(event.currentTarget);
+        const card = event.currentTarget;
+
+        // 진술문이 선택된 상태에서 다른 그룹 안의 진술문을 누르면, 선택한 진술문을 그 그룹으로 옮깁니다.
+        if (selectedCardId && selectedCardId !== card.id) {
+            const targetZone = card.parentElement;
+            const selectedCard = document.getElementById(selectedCardId);
+            if (targetZone && targetZone.classList.contains('group-dropzone') && selectedCard && selectedCard.parentElement !== targetZone) {
+                moveCardToZone(selectedCard, targetZone);
+                return;
+            }
+        }
+
+        toggleCardSelection(card);
+    }
+
+    function returnSelectedCardToPool() {
+        moveSelectedCardToZone(document.getElementById('cardPool'));
+    }
+
+    function updateSelectionBar() {
+        const bar = document.getElementById('selectionBar');
+        if (!bar) return;
+
+        const card = selectedCardId ? document.getElementById(selectedCardId) : null;
+        if (!card) {
+            bar.classList.remove('show');
+            return;
+        }
+
+        const number = card.id.replace('card-', '');
+        const inGroup = card.parentElement && card.parentElement.classList.contains('group-dropzone');
+        document.getElementById('selectionBarText').innerHTML = '<strong>' + number + '번 진술문 선택됨</strong> · 옮길 그룹의 아무 곳이나 누르세요.';
+        document.getElementById('btnReturnPool').style.display = inGroup ? '' : 'none';
+        bar.classList.add('show');
     }
 
     function toggleCardSelection(card) {
@@ -1320,6 +1405,7 @@
         clearSelectedCard();
         selectedCardId = card.id;
         card.classList.add('selected');
+        updateSelectionBar();
     }
 
     function clearSelectedCard() {
@@ -1330,6 +1416,7 @@
             }
         }
         selectedCardId = null;
+        updateSelectionBar();
     }
 
     function moveSelectedCardToZone(targetZone) {
@@ -1911,6 +1998,11 @@
         }, 1000);
     }
 </script>
+<div class="selection-bar" id="selectionBar" role="region" aria-live="polite">
+    <div class="selection-bar-text" id="selectionBarText"></div>
+    <button class="btn-return-pool" id="btnReturnPool" type="button" onclick="returnSelectedCardToPool()">목록으로 되돌리기</button>
+    <button class="btn-cancel-select" type="button" onclick="clearSelectedCard()">선택 취소</button>
+</div>
 </body>
 </html>
 
