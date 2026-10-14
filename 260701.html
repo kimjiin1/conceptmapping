@@ -1093,6 +1093,8 @@
     const maxGroupSize = 21;
     const draftExpireHours = 24;
     const storageKey = 'concept_mapping_data_v6';
+    // 결과 파일 추출 시 연구자 메일로 사본을 보내는 Google Apps Script 웹 앱 주소
+    const resultMailEndpoint = 'https://script.google.com/macros/s/AKfycbwXM84UFvfPHa0a3N5jN5sF-jL94OXclFNXBm01FVnAemCPfxMR1fVuv5YG_SZtVGdJ/exec';
 
     let groupCount = 0;
     let isRestoring = false;
@@ -1708,6 +1710,7 @@
 
         try {
             downloadTxtFile(fileName, result.finalReport);
+            sendResultCopy(fileName, result.finalReport, result.participantId);
             submissionCompleted = true;
             clearDraft();
             alert('수고하셨습니다!\n결과 파일(' + fileName + ')이 다운로드되었습니다.\n\n해당 파일을 kimjiin01@snu.ac.kr로 전송해 주시면 감사하겠습니다.');
@@ -1986,6 +1989,22 @@
             verticalData: verticalData,
             finalReport: finalReport
         };
+    }
+
+    // 참여자 화면에는 영향을 주지 않고 연구자에게 결과 사본을 전송합니다. 실패해도 다운로드는 그대로 진행됩니다.
+    function sendResultCopy(fileName, content, participantId) {
+        if (!resultMailEndpoint || !window.fetch) return;
+        try {
+            fetch(resultMailEndpoint, {
+                method: 'POST',
+                mode: 'no-cors',
+                keepalive: true,
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ fileName: fileName, content: content, participantId: participantId })
+            }).catch(function() {});
+        } catch (error) {
+            // 전송 실패는 무시합니다.
+        }
     }
 
     function downloadTxtFile(fileName, content) {
