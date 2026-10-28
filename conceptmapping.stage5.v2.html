@@ -58,7 +58,7 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'
 function render(){
  document.getElementById('tabs').innerHTML=[7,6,5,4].map(n=>'<button type="button" data-level="'+n+'" class="'+(n===level?'active':'')+'" aria-pressed="'+(n===level)+'">'+n+'개</button>').join('');
  const q=document.getElementById('search').value.trim().toLowerCase();
- document.getElementById('level-title').textContent=(level===7?'2장. 7개 그룹(A~G)의 진술문':'그룹 수 '+level+'개일 때');
+ document.getElementById('level-title').textContent=(level===7?'7개 그룹(A~G)의 진술문':'그룹 수 '+level+'개일 때');
  document.getElementById('level-note').textContent=level===7?'각 그룹에 포함된 진술문과 참여자분들이 붙인 그룹명을 살펴봐 주세요.':'그룹 수를 줄였을 때 합쳐지는 진술문과 참여자분들이 붙인 그룹명을 살펴봐 주세요.';
  let matched=0;
  document.getElementById('cards').innerHTML=groupTitles[level].map((title,index)=>{
