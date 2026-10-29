@@ -10,7 +10,7 @@
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.62 "Pretendard","Malgun Gothic","Noto Sans KR",system-ui,sans-serif}
 button,input{font:inherit}.page{max-width:1300px;margin:auto;padding:30px 24px 70px}h1{font-size:27px;line-height:1.38;margin:0 0 4px}h2{font-size:21px;margin:0 0 10px}p{margin:8px 0}.subtitle,.muted{color:var(--muted)}
 .intro{margin:18px 0 22px;padding:18px 22px;background:white;border:1px solid var(--line)}.intro p{margin:0 0 9px}.intro p:last-child{margin:0}
-.merge-guide{background:white;padding:18px 21px;border:1px solid var(--line);margin-bottom:20px}.merge-guide p{margin:2px 0 12px}.table-scroll{overflow-x:auto}.merge-table{width:100%;border-collapse:collapse;min-width:580px;text-align:center}.merge-table th,.merge-table td{border:1px solid var(--line);padding:8px 12px}.merge-table th{background:var(--head)}.merge-table .just-merged{background:var(--merged);font-weight:800}.merge-table td:first-child{text-align:left}.merge-guide h3{font-size:15px;margin:14px 0 4px}
+.merge-guide{background:white;padding:18px 21px;border:1px solid var(--line);margin-bottom:20px}.merge-guide p{margin:2px 0 12px}.table-scroll{overflow-x:auto}.merge-table{width:100%;border-collapse:collapse;min-width:580px;text-align:center}.merge-table th,.merge-table td{border:1px solid var(--line);padding:8px 12px}.merge-table th{background:var(--head)}.merge-table .just-merged{background:var(--merged);font-weight:800}.merge-guide h3{font-size:15px;margin:14px 0 4px}
 .guide-note{font-size:14px;color:var(--muted);margin-top:10px!important}.criteria{margin:18px 0 0;padding:13px 16px;background:#f1f1f1;border-left:4px solid #888;font-size:14px}.criteria b{display:block}
 .controls{position:sticky;top:0;z-index:9;background:#fafafa;padding:13px 0 11px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:center;gap:10px}.controls strong{margin-right:4px}.tabs{display:flex;gap:5px}.tabs button{border:1px solid #bbb;background:white;color:var(--ink);padding:6px 13px;cursor:pointer;border-radius:5px;font-weight:700}.tabs button.active{background:#333;color:white;border-color:#333}.search{margin-left:auto;min-width:190px;width:230px;max-width:100%;background:white;border:1px solid #aaa;border-radius:5px;padding:7px 10px}button:focus-visible,input:focus-visible{outline:3px solid #b8793b;outline-offset:2px}
 .section-title{margin:24px 0 14px}.section-title h2{margin:0}.section-title p{font-size:14px;color:var(--muted)}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start}.card{min-width:0;background:white;border:1px solid var(--line)}.card.new-merge{border-color:var(--merged-edge)}.card header{padding:11px 15px;background:var(--head);display:flex;justify-content:space-between;gap:12px;align-items:baseline}.card.new-merge header{background:var(--merged)}.card h3{font-size:18px;line-height:1.35;margin:0}.card header span{white-space:nowrap;font-size:14px;font-weight:700}.merge-desc{padding:9px 15px;color:#69441d;background:#fff9f0;font-size:13px;border-bottom:1px solid var(--line)}
@@ -39,13 +39,13 @@ button,input{font:inherit}.page{max-width:1300px;margin:auto;padding:30px 24px 7
 → 하나의 이름으로 부를 수 있을 만큼 비슷하다고 생각되면 합치기<br>
 → 성격이나 특징 등이 달라 따로 두는 것이 낫다고 생각되면 그 전 단계에서 멈추기</p>
 <div class="table-scroll"><table class="merge-table"><thead><tr><th>7개일 때</th><th>6개일 때</th><th>5개일 때</th><th>4개일 때</th></tr></thead><tbody>
-<tr><td><b>A</b> 14개</td><td>A</td><td>A</td><td>A</td></tr>
-<tr><td><b>B</b> 15개</td><td>B</td><td class="just-merged" rowspan="2">B + G</td><td rowspan="2">B + G</td></tr>
-<tr><td><b>G</b> 5개</td><td>G</td></tr>
-<tr><td><b>C</b> 9개</td><td>C</td><td>C</td><td>C</td></tr>
-<tr><td><b>D</b> 10개</td><td>D</td><td>D</td><td class="just-merged" rowspan="3">D + E + F</td></tr>
-<tr><td><b>E</b> 9개</td><td class="just-merged" rowspan="2">E + F</td><td rowspan="2">E + F</td></tr>
-<tr><td><b>F</b> 3개</td></tr>
+<tr><td><b>A</b></td><td>A</td><td>A</td><td>A</td></tr>
+<tr><td><b>B</b></td><td>B</td><td class="just-merged" rowspan="2">B + G</td><td rowspan="2">B + G</td></tr>
+<tr><td><b>G</b></td><td>G</td></tr>
+<tr><td><b>C</b></td><td>C</td><td>C</td><td>C</td></tr>
+<tr><td><b>D</b></td><td>D</td><td>D</td><td class="just-merged" rowspan="3">D + E + F</td></tr>
+<tr><td><b>E</b></td><td class="just-merged" rowspan="2">E + F</td><td rowspan="2">E + F</td></tr>
+<tr><td><b>F</b></td></tr>
 </tbody></table></div><p class="guide-note">*색칠된 칸은 그 단계에서 새로 합쳐지는 그룹입니다.</p>
 </section>
 <div class="controls"><strong>그룹 수 선택</strong><div class="tabs" id="tabs" role="group" aria-label="그룹 수 선택"></div><input class="search" id="search" type="search" placeholder="진술문 번호 또는 내용 검색" aria-label="진술문 번호 또는 내용 검색"></div>
